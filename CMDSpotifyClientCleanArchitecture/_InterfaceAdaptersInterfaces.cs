@@ -5,7 +5,7 @@
         Task<string> SearchTrackAsync(string trackName);
         Task<string> SearchAlbumAsync(string albumName);
         Task<string> SearchArtistAsync(string artistName);
-        Task<string> SearchGenrePlaylistAsync(string playlistName);
+        Task<string> SearchGenrePlaylistAsync(string genreName);
     }
 
     public interface ISpotifyDataRetrievalAdapter

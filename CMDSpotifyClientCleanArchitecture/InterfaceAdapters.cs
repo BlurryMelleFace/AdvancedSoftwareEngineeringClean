@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using CMDSpotifyClient.Entities;
-using CMDSpotifyClient.Infrastructure; // Stellen Sie sicher, dass der korrekte Namespace verwendet wird.
+using CMDSpotifyClient.Infrastructure;
 using CMDSpotifyClient.InterfaceAdapters.Interfaces;
 
 namespace CMDSpotifyClient.InterfaceAdapters
@@ -26,7 +26,7 @@ namespace CMDSpotifyClient.InterfaceAdapters
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             var response = await _httpClient.GetAsync(uri);
-            if (!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)  
             {
                 throw new HttpRequestException($"Spotify API returned error: {response.StatusCode}");
             }

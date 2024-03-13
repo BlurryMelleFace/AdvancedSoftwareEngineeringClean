@@ -39,11 +39,15 @@ builder.ConfigureServices((hostContext, services) =>
     // Registriere Use Cases
     services.AddTransient<ISearchTrackUseCase, SearchTrackUseCase>();
     services.AddTransient<ISearchArtistUseCase, SearchArtistUseCase>();
+    services.AddTransient<ISearchAlbumUseCase, SearchAlbumUseCase>();
+    services.AddTransient<ISearchGenrePlaylistUseCase, SearchGenrePlaylistUseCase>();
     // Füge weitere Use Cases hinzu, wie benötigt
 
     // Registriere Präsentationsschicht
     services.AddTransient<SearchTrackScreen>();
     services.AddTransient<SearchArtistScreen>();
+    services.AddTransient<SearchAlbumScreen>();
+    services.AddTransient<SearchGenrePlaylistScreen>();
     services.AddTransient<MainMenuPage>();
     // Füge weitere Bildschirme oder Menüs hinzu, wie benötigt
 

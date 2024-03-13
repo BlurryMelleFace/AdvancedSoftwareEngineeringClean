@@ -18,7 +18,6 @@ namespace CMDSpotifyClient.UseCases.Interfaces
     {
         Task<List<Playlist>> ExecuteAsync(string genreName);
     }
-
     public interface IGetAlbumUseCase
     {
         Task<Album> ExecuteAsync(string trackId);
