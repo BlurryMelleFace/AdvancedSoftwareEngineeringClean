@@ -1,0 +1,5 @@
+C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanArchitecture\obj\Debug\net6.0\CMDSpotifyClientCleanArchitecture.csproj.AssemblyReference.cache
+C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanArchitecture\obj\Debug\net6.0\CMDSpotifyClientCleanArchitecture.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanArchitecture\obj\Debug\net6.0\CMDSpotifyClientCleanArchitecture.AssemblyInfoInputs.cache
+C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanArchitecture\obj\Debug\net6.0\CMDSpotifyClientCleanArchitecture.AssemblyInfo.cs
+C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanArchitecture\obj\Debug\net6.0\CMDSpotifyClientCleanArchitecture.csproj.CoreCompileInputs.cache
