@@ -5,11 +5,12 @@
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public TimeSpan Duration { get; set; }
+        public int DurationMs { get; set; }
         public bool Explicit { get; set; }
         public string PreviewUrl { get; set; }
         public List<Artist> Artists { get; set; } = new List<Artist>();
         public Album Album { get; set; }
+        public int Popularity { get; set; } 
     }
 
     public class Artist

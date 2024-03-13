@@ -4,7 +4,19 @@ namespace CMDSpotifyClient.UseCases.Interfaces
 {
     public interface ISearchTrackUseCase
     {
-        Task<Track> ExecuteAsync(string trackName);
+        Task<List<Track>> ExecuteAsync(string trackName);
+    }
+    public interface ISearchArtistUseCase
+    {
+        Task<List<Artist>> ExecuteAsync(string artistName);
+    }
+    public interface ISearchAlbumUseCase
+    {
+        Task<List<Album>> ExecuteAsync(string albumName);
+    }
+    public interface ISearchGenrePlaylistUseCase
+    {
+        Task<List<Playlist>> ExecuteAsync(string genreName);
     }
 
     public interface IGetAlbumUseCase

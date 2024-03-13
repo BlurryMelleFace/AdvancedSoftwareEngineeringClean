@@ -38,10 +38,12 @@ builder.ConfigureServices((hostContext, services) =>
 
     // Registriere Use Cases
     services.AddTransient<ISearchTrackUseCase, SearchTrackUseCase>();
+    services.AddTransient<ISearchArtistUseCase, SearchArtistUseCase>();
     // Füge weitere Use Cases hinzu, wie benötigt
 
     // Registriere Präsentationsschicht
     services.AddTransient<SearchTrackScreen>();
+    services.AddTransient<SearchArtistScreen>();
     services.AddTransient<MainMenuPage>();
     // Füge weitere Bildschirme oder Menüs hinzu, wie benötigt
 
@@ -68,17 +70,6 @@ async Task RunApplicationAsync(IServiceProvider services)
     {
         Console.WriteLine($"Ein unerwarteter Fehler ist aufgetreten: {ex.Message}");
     }
-
-    //try
-    //{
-    //    // Zeige das Hauptmenü oder den Startbildschirm deiner Anwendung
-    //    var searchTrackScreen = serviceProvider.GetRequiredService<SearchTrackScreen>();
-    //    await searchTrackScreen.ShowAsync();
-    //}
-    //catch (Exception ex)
-    //{
-    //    Console.WriteLine($"Ein unerwarteter Fehler ist aufgetreten: {ex.Message}");
-    //}
 }
 
 await app.RunAsync();
