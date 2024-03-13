@@ -51,10 +51,6 @@ builder.ConfigureServices((hostContext, services) =>
 
 var app = builder.Build();
 
-// Abrufen und Speichern des Zugriffstokens vor dem Start der Anwendung
-var spotifyCredentials = app.Services.GetRequiredService<SpotifyCredentials>();
-await spotifyCredentials.FetchAccessTokenAsync();
-
 // Hier beginnt die Ausführung deiner Anwendung
 await RunApplicationAsync(app.Services);
 
