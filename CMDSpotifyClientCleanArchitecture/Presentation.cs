@@ -3,29 +3,60 @@ using CMDSpotifyClient.UseCases.Interfaces;
 
 namespace CMDSpotifyClient.Presentation
 {
+    //Search Pages
     public class SearchTrackScreen
     {
         private readonly ISearchTrackUseCase _searchTrackUseCase;
-
-        public SearchTrackScreen(ISearchTrackUseCase searchTrackUseCase)
+        private readonly IGetTrackUseCase _getTrackUseCase;
+        public SearchTrackScreen(
+            ISearchTrackUseCase searchTrackUseCase,
+            IGetTrackUseCase getTrackUseCase
+            )
         {
             _searchTrackUseCase = searchTrackUseCase;
+            _getTrackUseCase = getTrackUseCase;
         }
         public async Task ShowAsync()
         {
             Console.Clear();
-            Console.WriteLine("Geben Sie den Namen des Tracks ein, den Sie suchen möchten:");
+            Console.WriteLine("Geben Sie den Namen des Tracks ein, den Sie suchen möchten: ");
             var trackName = Console.ReadLine();
+            List<string> listOfTrackIds = new List<string>();
+            try
+            {
+                Console.Clear();
+                Console.WriteLine("5 Vorschläge basierend auf ihrer Suchanfrage");
+                Console.WriteLine("\n");
+                var tracks = await _searchTrackUseCase.ExecuteAsync(trackName); 
+                foreach (var track in tracks)
+                {
+                    Console.WriteLine($"Gefunden: {track.Name} von {string.Join(", ", track.Artists.Select(a => a.Name))}");
+                    Console.WriteLine($"SpotifyID: {track.Id}");
+                    listOfTrackIds.Add( track.Id );
+                    Console.WriteLine("\n");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"Ein Fehler ist aufgetreten: {ex.Message}");
+            }
+
+            Console.WriteLine("\n");
+            Console.WriteLine("1. Zeige mir die Tracks");
+            Console.WriteLine("2. <--");
+            var option = Console.ReadLine();
 
             try
             {
-                var tracks = await _searchTrackUseCase.ExecuteAsync(trackName);
-                foreach (var track in tracks) 
+                switch (option)
                 {
-                    Console.Clear();
-                    Console.WriteLine($"Gefunden: {track.Name} von {string.Join(", ", track.Artists.Select(a => a.Name))}");
-                    Console.WriteLine($"SpotifyID: {track.Id}");
-                    Console.WriteLine("\n");
+                    case "1":
+                        var GetTrackScreen = new GetTrackScreen(_getTrackUseCase,listOfTrackIds);
+                        await GetTrackScreen.ShowAsync();
+                        break;
+                    case "2":
+                        break;
                 }
             }
             catch (Exception ex)
@@ -143,6 +174,48 @@ namespace CMDSpotifyClient.Presentation
             Console.ReadKey();
         }
     }
+    //Get Pages
+
+    public class GetTrackScreen
+    {
+        private readonly IGetTrackUseCase _getTrackUseCase;
+        private readonly List<string> _listOfTrackIds;
+
+        public GetTrackScreen(IGetTrackUseCase getTrackUseCase,List<string> listOfTrackIds)
+        {
+            _getTrackUseCase = getTrackUseCase;
+            _listOfTrackIds = listOfTrackIds;
+            
+        }
+        public async Task ShowAsync()
+        {
+            Console.Clear();
+            try
+            {
+                foreach (var trackid in _listOfTrackIds)
+                {
+                    var tracks = await _getTrackUseCase.ExecuteAsync(trackid);
+                    foreach (var track in tracks)
+                    {
+                        Console.WriteLine($"Gefunden: {track.Name}");
+                        Console.WriteLine($"SpotifyID: {track.Id}");
+                        Console.WriteLine($"Länge in Ms: {track.DurationMs}");
+                        Console.WriteLine("\n");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"Ein Fehler ist aufgetreten: {ex.Message}");
+            }
+
+            Console.WriteLine("Drücke eine beliebige Taste, um fortzufahren...");
+            Console.ReadKey();
+        }
+    }
+
+    // Main Menu Page
     public class MainMenuPage
     {
         private readonly ISearchTrackUseCase _searchTrackUseCase;
@@ -150,17 +223,25 @@ namespace CMDSpotifyClient.Presentation
         private readonly ISearchAlbumUseCase _searchAlbumUseCase;
         private readonly ISearchGenrePlaylistUseCase _searchGenrePlaylistUseCase;
 
+        private readonly IGetTrackUseCase _getTrackUseCase;
+
+
         public MainMenuPage(
             ISearchTrackUseCase searchTrackUseCase,
             ISearchArtistUseCase searchArtistUseCase,
             ISearchAlbumUseCase searchAlbumUseCase,
-            ISearchGenrePlaylistUseCase searchGenrePlaylistUseCase
+            ISearchGenrePlaylistUseCase searchGenrePlaylistUseCase,
+
+            IGetTrackUseCase getTrackUseCase
             )
+
         {
-            _searchTrackUseCase = searchTrackUseCase;
-            _searchArtistUseCase = searchArtistUseCase;
-            _searchAlbumUseCase = searchAlbumUseCase;
-            _searchGenrePlaylistUseCase = searchGenrePlaylistUseCase;
+        _searchTrackUseCase = searchTrackUseCase;
+        _searchArtistUseCase = searchArtistUseCase;
+        _searchAlbumUseCase = searchAlbumUseCase;
+        _searchGenrePlaylistUseCase = searchGenrePlaylistUseCase;
+
+        _getTrackUseCase = getTrackUseCase;
         }
 
         public async Task ShowAsync()
@@ -182,7 +263,7 @@ namespace CMDSpotifyClient.Presentation
                 switch (option)
                 {
                     case "1":
-                        var searchTrackScreen = new SearchTrackScreen(_searchTrackUseCase);
+                        var searchTrackScreen = new SearchTrackScreen(_searchTrackUseCase,_getTrackUseCase);
                         await searchTrackScreen.ShowAsync();
                         break;
                     case "2":

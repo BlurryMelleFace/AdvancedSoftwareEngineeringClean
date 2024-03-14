@@ -13,6 +13,6 @@
         Task<string> GetTrackAsync(string trackId);
         Task<string> GetAlbumAsync(string albumId);
         Task<string> GetArtistAsync(string artistId);
-        Task<string> GetPlaylistAsync(string playlistId);
+        Task<string> GetGenrePlaylistAsync(string playlistId);
     }
 }

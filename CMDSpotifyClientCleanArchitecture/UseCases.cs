@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace CMDSpotifyClient.UseCases
 {
+    //Search Use Cases
     public class SearchTrackUseCase : ISearchTrackUseCase
     {
         private readonly ISpotifySearchAdapter _spotifySearchAdapter;
@@ -135,6 +136,39 @@ namespace CMDSpotifyClient.UseCases
 
         }
     }
+    // Get Use Cases
+    public class GetTrackUseCase : IGetTrackUseCase
+    {
+        private readonly ISpotifyDataRetrievalAdapter _spotifyDataRetrievalAdapter;
+        public GetTrackUseCase(ISpotifyDataRetrievalAdapter spotifyDataRetrievalAdapter)
+        {
+            _spotifyDataRetrievalAdapter = spotifyDataRetrievalAdapter;
+        }
+        public async Task<List<Track>> ExecuteAsync(string trackId)
+        {
+            var jsonResult = await _spotifyDataRetrievalAdapter.GetTrackAsync(trackId);
+            var response = JsonConvert.DeserializeObject<JSONResponses.GetTrack.Rootobject>(jsonResult);
+            var tracks = new List<Track>();
+
+            var track = new Track
+            {
+                Id = response.id,
+                Name = response.name,
+                DurationMs = response.duration_ms,
+                Artists = response.artists.Select(artist => new Artist
+                {
+                    Id = artist.id,
+                    Name = artist.name
+                }).ToList(),
+                Popularity = response.popularity,
+            };
+
+            tracks.Add(track);
+
+            return tracks;
+        }
+    }
+
     public class GetAlbumUseCase : IGetAlbumUseCase
     {
         private readonly ISpotifyDataRetrievalAdapter _spotifyDataRetrievalAdapter;
@@ -142,11 +176,14 @@ namespace CMDSpotifyClient.UseCases
         {
             _spotifyDataRetrievalAdapter = spotifyDataRetrievalAdapter;
         }
-        public async Task<Album> ExecuteAsync(string albumId)
+        public async Task<List<Album>> ExecuteAsync(string albumId)
         {
             var jsonResult = await _spotifyDataRetrievalAdapter.GetAlbumAsync(albumId);
-            var album = JsonConvert.DeserializeObject<Album>(jsonResult); // Beispielhafte Deserialisierung
-            return album;
+            var response = JsonConvert.DeserializeObject<JSONResponses.GetAlbum.Rootobject>(jsonResult);
+
+            var albums = new List<Album>();
+
+            return albums;
         }
     }
 }

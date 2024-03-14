@@ -6,6 +6,8 @@ using CMDSpotifyClient.UseCases;
 using CMDSpotifyClient.UseCases.Interfaces;
 using CMDSpotifyClient.Presentation;
 using CMDSpotifyClient.Infrastructure;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Http;
 
 //Rechtsklicken Sie auf Ihr Projekt im Solution Explorer, wählen Sie "Manage NuGet Packages...", und suchen Sie dann nach den oben genannten Paketen, um sie zu installieren.
 //package Microsoft.Extensions.Hosting
@@ -36,23 +38,32 @@ builder.ConfigureServices((hostContext, services) =>
         return new SpotifyCredentials(httpClient, clientId, clientSecret);
     });
 
-    // Registriere Use Cases
+    // Registrierte Search Use Cases
     services.AddTransient<ISearchTrackUseCase, SearchTrackUseCase>();
     services.AddTransient<ISearchArtistUseCase, SearchArtistUseCase>();
     services.AddTransient<ISearchAlbumUseCase, SearchAlbumUseCase>();
     services.AddTransient<ISearchGenrePlaylistUseCase, SearchGenrePlaylistUseCase>();
-    // Füge weitere Use Cases hinzu, wie benötigt
+    // Registrierte Get Use Cases
+    services.AddTransient<IGetTrackUseCase, GetTrackUseCase>();
+    //services.AddTransient<IGetArtistUseCase, GetArtistUseCase>();
+    //services.AddTransient<IGetAlbumUseCase, GetAlbumUseCase>();
+    //services.AddTransient<IGetGenrePlaylistUseCase, GetGenrePlaylistUseCase>();
 
-    // Registriere Präsentationsschicht
+    // Registrierte Menu Präsentationsschicht
+    services.AddTransient<MainMenuPage>();
+    // Registrierte Search Präsentationsschichten
     services.AddTransient<SearchTrackScreen>();
     services.AddTransient<SearchArtistScreen>();
     services.AddTransient<SearchAlbumScreen>();
     services.AddTransient<SearchGenrePlaylistScreen>();
-    services.AddTransient<MainMenuPage>();
-    // Füge weitere Bildschirme oder Menüs hinzu, wie benötigt
+    // Registrierte Get Präsentationsschichten
+    services.AddTransient<GetTrackScreen>();
+    //services.AddTransient<GetArtistScreen>();
+    //services.AddTransient<GetAlbumScreen>();
+    //services.AddTransient<GetGenrePlaylistScreen>();
 
-    // Optional: Wenn du eine SpotifyCredentials-Klasse hast, die Zugriffstokens verwaltet,
-    // könntest du diese hier auch konfigurieren oder registrieren.
+    services.RemoveAll<IHttpMessageHandlerBuilderFilter>();
+
 });
 
 var app = builder.Build();

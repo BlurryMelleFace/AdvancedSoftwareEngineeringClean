@@ -2,6 +2,7 @@
 
 namespace CMDSpotifyClient.UseCases.Interfaces
 {
+    //Search Use Case Interfaces
     public interface ISearchTrackUseCase
     {
         Task<List<Track>> ExecuteAsync(string trackName);
@@ -18,10 +19,22 @@ namespace CMDSpotifyClient.UseCases.Interfaces
     {
         Task<List<Playlist>> ExecuteAsync(string genreName);
     }
+    //Get Use Case Interfaces
+    public interface IGetTrackUseCase
+    {
+        Task<List<Track>> ExecuteAsync(string trackId);
+    }
+    public interface IGetArtistUseCase
+    {
+        Task<List<Artist>> ExecuteAsync(string artistId);
+    }
     public interface IGetAlbumUseCase
     {
-        Task<Album> ExecuteAsync(string trackId);
+        Task<List<Album>> ExecuteAsync(string albumId);
+    }
+    public interface IGetGenrePlaylistUseCase
+    {
+        Task<List<Playlist>> ExecuteAsync(string playlistId);
     }
 
-    // Ähnliche Interfaces für Alben, Künstler, Playlists...
 }
