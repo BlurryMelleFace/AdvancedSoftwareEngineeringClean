@@ -8,6 +8,7 @@ using CMDSpotifyClient.Presentation;
 using CMDSpotifyClient.Infrastructure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Http;
+using CMDSpotifyClientCleanArchitecture.Controller;
 
 //Rechtsklicken Sie auf Ihr Projekt im Solution Explorer, wählen Sie "Manage NuGet Packages...", und suchen Sie dann nach den oben genannten Paketen, um sie zu installieren.
 //package Microsoft.Extensions.Hosting
@@ -45,9 +46,10 @@ builder.ConfigureServices((hostContext, services) =>
     services.AddTransient<ISearchGenrePlaylistUseCase, SearchGenrePlaylistUseCase>();
     // Registrierte Get Use Cases
     services.AddTransient<IGetTrackUseCase, GetTrackUseCase>();
-    //services.AddTransient<IGetArtistUseCase, GetArtistUseCase>();
+    //1services.AddTransient<IGetArtistUseCase, GetArtistUseCase>();
     //services.AddTransient<IGetAlbumUseCase, GetAlbumUseCase>();
     //services.AddTransient<IGetGenrePlaylistUseCase, GetGenrePlaylistUseCase>();
+    services.AddTransient<Controller>();
 
     // Registrierte Menu Präsentationsschicht
     services.AddTransient<MainMenuPage>();

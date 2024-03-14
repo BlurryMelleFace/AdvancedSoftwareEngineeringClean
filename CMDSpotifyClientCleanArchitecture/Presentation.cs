@@ -1,20 +1,15 @@
-﻿using CMDSpotifyClient.UseCases;
-using CMDSpotifyClient.UseCases.Interfaces;
+﻿using CMDSpotifyClient.UseCases.Interfaces;
+using CMDSpotifyClientCleanArchitecture.Controller;
 
 namespace CMDSpotifyClient.Presentation
 {
     //Search Pages
     public class SearchTrackScreen
     {
-        private readonly ISearchTrackUseCase _searchTrackUseCase;
-        private readonly IGetTrackUseCase _getTrackUseCase;
-        public SearchTrackScreen(
-            ISearchTrackUseCase searchTrackUseCase,
-            IGetTrackUseCase getTrackUseCase
-            )
+        private Controller _controller;
+        public SearchTrackScreen(Controller controller)
         {
-            _searchTrackUseCase = searchTrackUseCase;
-            _getTrackUseCase = getTrackUseCase;
+            _controller = controller;
         }
         public async Task ShowAsync()
         {
@@ -27,12 +22,12 @@ namespace CMDSpotifyClient.Presentation
                 Console.Clear();
                 Console.WriteLine("5 Vorschläge basierend auf ihrer Suchanfrage");
                 Console.WriteLine("\n");
-                var tracks = await _searchTrackUseCase.ExecuteAsync(trackName); 
+                var tracks = await _controller.SearchTrack(trackName);
                 foreach (var track in tracks)
                 {
                     Console.WriteLine($"Gefunden: {track.Name} von {string.Join(", ", track.Artists.Select(a => a.Name))}");
                     Console.WriteLine($"SpotifyID: {track.Id}");
-                    listOfTrackIds.Add( track.Id );
+                    listOfTrackIds.Add(track.Id);
                     Console.WriteLine("\n");
                 }
             }
@@ -52,7 +47,7 @@ namespace CMDSpotifyClient.Presentation
                 switch (option)
                 {
                     case "1":
-                        var GetTrackScreen = new GetTrackScreen(_getTrackUseCase,listOfTrackIds);
+                        var GetTrackScreen = new GetTrackScreen(_controller, listOfTrackIds);
                         await GetTrackScreen.ShowAsync();
                         break;
                     case "2":
@@ -71,11 +66,11 @@ namespace CMDSpotifyClient.Presentation
     }
     public class SearchArtistScreen
     {
-        private readonly ISearchArtistUseCase _searchArtistUseCase;
+        private Controller _controller;
 
-        public SearchArtistScreen(ISearchArtistUseCase searchArtistUseCase)
+        public SearchArtistScreen(Controller controller)
         {
-            _searchArtistUseCase = searchArtistUseCase;
+            _controller = controller;
         }
         public async Task ShowAsync()
         {
@@ -85,7 +80,7 @@ namespace CMDSpotifyClient.Presentation
 
             try
             {
-                var artists = await _searchArtistUseCase.ExecuteAsync(artistName);
+                var artists = await _controller.SearchArtist(artistName);
                 foreach (var artist in artists)
                 {
                     Console.Clear();
@@ -106,11 +101,11 @@ namespace CMDSpotifyClient.Presentation
     }
     public class SearchAlbumScreen
     {
-        private readonly ISearchAlbumUseCase _searchAlbumUseCase;
+        private readonly Controller _controller;
 
-        public SearchAlbumScreen(ISearchAlbumUseCase searchAlbumUseCase)
+        public SearchAlbumScreen(Controller controller)
         {
-            _searchAlbumUseCase = searchAlbumUseCase;
+            _controller = controller;
         }
         public async Task ShowAsync()
         {
@@ -120,7 +115,7 @@ namespace CMDSpotifyClient.Presentation
 
             try
             {
-                var albums = await _searchAlbumUseCase.ExecuteAsync(albumName);
+                var albums = await _controller.SearchAlbum(albumName);
                 foreach (var album in albums)
                 {
                     Console.Clear();
@@ -141,11 +136,11 @@ namespace CMDSpotifyClient.Presentation
     }
     public class SearchGenrePlaylistScreen
     {
-        private readonly ISearchGenrePlaylistUseCase _searchGenrePlaylistUseCase;
+        private readonly Controller _controller;
 
-        public SearchGenrePlaylistScreen(ISearchGenrePlaylistUseCase searchGenrePlaylistUseCase)
+        public SearchGenrePlaylistScreen(Controller controller)
         {
-            _searchGenrePlaylistUseCase = searchGenrePlaylistUseCase;
+            _controller = controller;
         }
         public async Task ShowAsync()
         {
@@ -155,7 +150,7 @@ namespace CMDSpotifyClient.Presentation
 
             try
             {
-                var playlists = await _searchGenrePlaylistUseCase.ExecuteAsync(genreName);
+                var playlists = await _controller.SearchGenrePlalyist(genreName);
                 foreach (var playlist in playlists)
                 {
                     Console.Clear();
@@ -178,14 +173,13 @@ namespace CMDSpotifyClient.Presentation
 
     public class GetTrackScreen
     {
-        private readonly IGetTrackUseCase _getTrackUseCase;
+        private Controller _controller;
         private readonly List<string> _listOfTrackIds;
 
-        public GetTrackScreen(IGetTrackUseCase getTrackUseCase,List<string> listOfTrackIds)
+        public GetTrackScreen(Controller controller, List<string> listOfTrackIds)
         {
-            _getTrackUseCase = getTrackUseCase;
+            _controller = controller;
             _listOfTrackIds = listOfTrackIds;
-            
         }
         public async Task ShowAsync()
         {
@@ -194,7 +188,7 @@ namespace CMDSpotifyClient.Presentation
             {
                 foreach (var trackid in _listOfTrackIds)
                 {
-                    var tracks = await _getTrackUseCase.ExecuteAsync(trackid);
+                    var tracks = await _controller.GetTrack(trackid);
                     foreach (var track in tracks)
                     {
                         Console.WriteLine($"Gefunden: {track.Name}");
@@ -218,30 +212,12 @@ namespace CMDSpotifyClient.Presentation
     // Main Menu Page
     public class MainMenuPage
     {
-        private readonly ISearchTrackUseCase _searchTrackUseCase;
-        private readonly ISearchArtistUseCase _searchArtistUseCase;
-        private readonly ISearchAlbumUseCase _searchAlbumUseCase;
-        private readonly ISearchGenrePlaylistUseCase _searchGenrePlaylistUseCase;
+        private Controller _controller;
 
-        private readonly IGetTrackUseCase _getTrackUseCase;
-
-
-        public MainMenuPage(
-            ISearchTrackUseCase searchTrackUseCase,
-            ISearchArtistUseCase searchArtistUseCase,
-            ISearchAlbumUseCase searchAlbumUseCase,
-            ISearchGenrePlaylistUseCase searchGenrePlaylistUseCase,
-
-            IGetTrackUseCase getTrackUseCase
-            )
+        public MainMenuPage(Controller controller)
 
         {
-        _searchTrackUseCase = searchTrackUseCase;
-        _searchArtistUseCase = searchArtistUseCase;
-        _searchAlbumUseCase = searchAlbumUseCase;
-        _searchGenrePlaylistUseCase = searchGenrePlaylistUseCase;
-
-        _getTrackUseCase = getTrackUseCase;
+            _controller = controller;
         }
 
         public async Task ShowAsync()
@@ -263,19 +239,19 @@ namespace CMDSpotifyClient.Presentation
                 switch (option)
                 {
                     case "1":
-                        var searchTrackScreen = new SearchTrackScreen(_searchTrackUseCase,_getTrackUseCase);
+                        var searchTrackScreen = new SearchTrackScreen(_controller);
                         await searchTrackScreen.ShowAsync();
                         break;
                     case "2":
-                        var searchArtistScreen = new SearchArtistScreen(_searchArtistUseCase); 
+                        var searchArtistScreen = new SearchArtistScreen(_controller);
                         await searchArtistScreen.ShowAsync();
                         break;
                     case "3":
-                        var searchAlbumScreen = new SearchAlbumScreen(_searchAlbumUseCase);
+                        var searchAlbumScreen = new SearchAlbumScreen(_controller);
                         await searchAlbumScreen.ShowAsync();
                         break;
                     case "4":
-                        var searchGenrePlaylistScreen = new SearchGenrePlaylistScreen(_searchGenrePlaylistUseCase);
+                        var searchGenrePlaylistScreen = new SearchGenrePlaylistScreen(_controller);
                         await searchGenrePlaylistScreen.ShowAsync();
                         break;
                     case "5":
