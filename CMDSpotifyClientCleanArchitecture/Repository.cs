@@ -107,7 +107,13 @@ namespace CMDSpotifyClient.Repository
         {
             _spotifyDataRetrievalAdapter = spotifyDataRetrievalAdapter;
         }
-
+        private string ConvertMsToMinSec(int ms)
+        {
+            int totalSeconds = ms / 1000;
+            int minutes = totalSeconds / 60;
+            int seconds = totalSeconds % 60;
+            return $"{minutes}:{seconds:D2}";
+        }
         public async Task<List<Track>> GetTrackAsync(string trackId)
         {
             var jsonResult = await _spotifyDataRetrievalAdapter.GetTrackAsync(trackId);
@@ -118,13 +124,23 @@ namespace CMDSpotifyClient.Repository
             {
                 Id = response.id,
                 Name = response.name,
-                DurationMs = response.duration_ms,
+                DurationMin = ConvertMsToMinSec(response.duration_ms),
                 Artists = response.artists.Select(artist => new Artist
                 {
                     Id = artist.id,
                     Name = artist.name
                 }).ToList(),
                 Popularity = response.popularity,
+                Explicit = response._explicit,
+                Album = new Album
+                {
+                    Id = response.album.id,
+                    Name = response.album.name,
+                    TotalTracks = response.album.total_tracks,
+                    ReleaseDate = response.album.release_date,
+                },
+                TrackNumber = response.track_number,
+
             };
 
             tracks.Add(track);

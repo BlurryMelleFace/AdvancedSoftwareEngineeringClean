@@ -34,7 +34,7 @@ namespace CMDSpotifyClient.InterfaceAdapters
         }
 
         public Task<string> SearchTrackAsync(string trackName) =>
-            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/search?q={Uri.EscapeDataString(trackName)}&type=track&limit=5");
+            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/search?q={Uri.EscapeDataString(trackName)}&type=track&limit=1");
 
         public Task<string> SearchAlbumAsync(string albumName) =>
             GetAuthorizedContentAsync($"{BaseSpotifyUrl}/search?q={Uri.EscapeDataString(albumName)}&type=album&limit=1");

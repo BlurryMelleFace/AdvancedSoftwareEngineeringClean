@@ -1,5 +1,6 @@
 ﻿using CMDSpotifyClient.UseCases.Interfaces;
 using CMDSpotifyClientCleanArchitecture.Controller;
+using System.Diagnostics;
 
 namespace CMDSpotifyClient.Presentation
 {
@@ -14,31 +15,32 @@ namespace CMDSpotifyClient.Presentation
         public async Task ShowAsync()
         {
             Console.Clear();
-            Console.WriteLine("Geben Sie den Namen des Tracks ein, den Sie suchen möchten: ");
+            Console.WriteLine("Enter the name of the track you want to search for: ");
             var trackName = Console.ReadLine();
             List<string> listOfTrackIds = new List<string>();
             try
             {
                 Console.Clear();
-                Console.WriteLine("5 Vorschläge basierend auf ihrer Suchanfrage");
+                Console.WriteLine("Suggestion based on your search query");
                 Console.WriteLine("\n");
                 var tracks = await _controller.SearchTrack(trackName);
                 foreach (var track in tracks)
                 {
-                    Console.WriteLine($"Gefunden: {track.Name} von {string.Join(", ", track.Artists.Select(a => a.Name))}");
+                    Console.WriteLine($"found: {track.Name} - {string.Join(", ", track.Artists.Select(a => a.Name))}");
                     Console.WriteLine($"SpotifyID: {track.Id}");
-                    listOfTrackIds.Add(track.Id);
                     Console.WriteLine("\n");
+
+                    listOfTrackIds.Add(track.Id);
                 }
             }
             catch (Exception ex)
             {
                 Console.Clear();
-                Console.WriteLine($"Ein Fehler ist aufgetreten: {ex.Message}");
+                Console.WriteLine($"There has been an Error: {ex.Message}");
             }
 
             Console.WriteLine("\n");
-            Console.WriteLine("1. Zeige mir die Tracks");
+            Console.WriteLine("1. Show me the Track");
             Console.WriteLine("2. <--");
             var option = Console.ReadLine();
 
@@ -57,17 +59,13 @@ namespace CMDSpotifyClient.Presentation
             catch (Exception ex)
             {
                 Console.Clear();
-                Console.WriteLine($"Ein Fehler ist aufgetreten: {ex.Message}");
+                Console.WriteLine($"There has been an Error: {ex.Message}");
             }
-
-            Console.WriteLine("Drücke eine beliebige Taste, um fortzufahren...");
-            Console.ReadKey();
         }
     }
     public class SearchArtistScreen
     {
         private Controller _controller;
-
         public SearchArtistScreen(Controller controller)
         {
             _controller = controller;
@@ -75,7 +73,7 @@ namespace CMDSpotifyClient.Presentation
         public async Task ShowAsync()
         {
             Console.Clear();
-            Console.WriteLine("Geben Sie den Namen des Artisten ein, den Sie suchen möchten:");
+            Console.WriteLine("Enter the name of the artist you want to search for:");
             var artistName = Console.ReadLine();
 
             try
@@ -83,7 +81,6 @@ namespace CMDSpotifyClient.Presentation
                 var artists = await _controller.SearchArtist(artistName);
                 foreach (var artist in artists)
                 {
-                    Console.Clear();
                     Console.WriteLine($"Gefunden: {artist.Name}");
                     Console.WriteLine($"SpotifyID: {artist.Id}");
                     Console.WriteLine("\n");
@@ -92,10 +89,10 @@ namespace CMDSpotifyClient.Presentation
             catch (Exception ex)
             {
                 Console.Clear();
-                Console.WriteLine($"Ein Fehler ist aufgetreten: {ex.Message}");
+                Console.WriteLine($"There has been an Error: {ex.Message}");
             }
 
-            Console.WriteLine("Drücke eine beliebige Taste, um fortzufahren...");
+            Console.WriteLine("Press any button to continue...");
             Console.ReadKey();
         }
     }
@@ -110,7 +107,7 @@ namespace CMDSpotifyClient.Presentation
         public async Task ShowAsync()
         {
             Console.Clear();
-            Console.WriteLine("Geben Sie den Namen des Albums ein, das Sie suchen möchten:");
+            Console.WriteLine("Enter the name of the album you want to search for:");
             var albumName = Console.ReadLine();
 
             try
@@ -118,8 +115,7 @@ namespace CMDSpotifyClient.Presentation
                 var albums = await _controller.SearchAlbum(albumName);
                 foreach (var album in albums)
                 {
-                    Console.Clear();
-                    Console.WriteLine($"Gefunden: {album.Name} von  {string.Join(", ", album.Artists.Select(a => a.Name))}");
+                    Console.WriteLine($"Gefunden: {album.Name} -  {string.Join(", ", album.Artists.Select(a => a.Name))}");
                     Console.WriteLine($"SpotifyID: {album.Id}");
                     Console.WriteLine("\n");
                 }
@@ -127,10 +123,10 @@ namespace CMDSpotifyClient.Presentation
             catch (Exception ex)
             {
                 Console.Clear();
-                Console.WriteLine($"Ein Fehler ist aufgetreten: {ex.Message}");
+                Console.WriteLine($"There has been an Error: {ex.Message}");
             }
 
-            Console.WriteLine("Drücke eine beliebige Taste, um fortzufahren...");
+            Console.WriteLine("Press any button to continue...");
             Console.ReadKey();
         }
     }
@@ -145,7 +141,7 @@ namespace CMDSpotifyClient.Presentation
         public async Task ShowAsync()
         {
             Console.Clear();
-            Console.WriteLine("Geben Sie einen Genre ein für das sie eine Playlist hören möchten:");
+            Console.WriteLine("Enter a genre for which you would like to listen to a playlist:");
             var genreName = Console.ReadLine();
 
             try
@@ -153,8 +149,7 @@ namespace CMDSpotifyClient.Presentation
                 var playlists = await _controller.SearchGenrePlayist(genreName);
                 foreach (var playlist in playlists)
                 {
-                    Console.Clear();
-                    Console.WriteLine($"Gefunden: {playlist.Name}");
+                    Console.WriteLine($"Found: {playlist.Name}");
                     Console.WriteLine($"SpotifyID: {playlist.Id}");
                     Console.WriteLine("\n");
                 }
@@ -162,10 +157,10 @@ namespace CMDSpotifyClient.Presentation
             catch (Exception ex)
             {
                 Console.Clear();
-                Console.WriteLine($"Ein Fehler ist aufgetreten: {ex.Message}");
+                Console.WriteLine($"There has been an Error: {ex.Message}");
             }
 
-            Console.WriteLine("Drücke eine beliebige Taste, um fortzufahren...");
+            Console.WriteLine("Press any button to continue...");
             Console.ReadKey();
         }
     }
@@ -186,14 +181,27 @@ namespace CMDSpotifyClient.Presentation
             Console.Clear();
             try
             {
-                foreach (var trackid in _listOfTrackIds)
+                foreach (var trackId in _listOfTrackIds)
                 {
-                    var tracks = await _controller.GetTrack(trackid);
+                    var tracks = await _controller.GetTrack(trackId);
                     foreach (var track in tracks)
                     {
-                        Console.WriteLine($"Gefunden: {track.Name}");
+                        Console.WriteLine($"Name of The Track: {track.Name}");
+                        int i = 1;
+                        foreach (var artist in track.Artists)
+                        {
+                            Console.WriteLine($"Artist {i}: {artist.Name}");
+                            i++;
+                        }
+                        Console.WriteLine("\n");
                         Console.WriteLine($"SpotifyID: {track.Id}");
-                        Console.WriteLine($"Länge in Ms: {track.DurationMs}");
+                        Console.WriteLine($"Duration in Min: {track.DurationMin}");
+                        Console.WriteLine($"Popularity: {track.Popularity}");
+                        Console.WriteLine($"Explicit: {track.Explicit}");
+                        Console.WriteLine($"Name Of the Corresponding Album: {track.Album.Name}");
+                        Console.WriteLine($"Album Release date: {track.Album.ReleaseDate}");
+                        Console.WriteLine($"Total Tracks in Album: {track.Album.TotalTracks}");
+                        Console.WriteLine($"Track Position in Album: {track.TrackNumber}");
                         Console.WriteLine("\n");
                     }
                 }
@@ -201,11 +209,30 @@ namespace CMDSpotifyClient.Presentation
             catch (Exception ex)
             {
                 Console.Clear();
-                Console.WriteLine($"Ein Fehler ist aufgetreten: {ex.Message}");
+                Console.WriteLine($"There has been an Error: {ex.Message}");
             }
 
-            Console.WriteLine("Drücke eine beliebige Taste, um fortzufahren...");
-            Console.ReadKey();
+            Console.WriteLine("\n");
+            Console.WriteLine("1. <--");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
+                        var SearchTrackScreen = new SearchTrackScreen(_controller);
+                        await SearchTrackScreen.ShowAsync();
+                        break;
+                    case "2":
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
         }
     }
 
@@ -226,13 +253,13 @@ namespace CMDSpotifyClient.Presentation
             while (!exit)
             {
                 Console.Clear();
-                Console.WriteLine("Hauptmenü");
-                Console.WriteLine("1. Suche nach einem Track");
-                Console.WriteLine("2. Suche nach einem Artist");
-                Console.WriteLine("3. Suche nach einem Album");
-                Console.WriteLine("4. Suche nach einem Genre");
-                Console.WriteLine("5. Beenden");
-                Console.Write("Wählen Sie eine Option: ");
+                Console.WriteLine("Main Menu");
+                Console.WriteLine("1. Search a Track");
+                Console.WriteLine("2. Search an Artist");
+                Console.WriteLine("3. Search an Album");
+                Console.WriteLine("4. Search a Genre");
+                Console.WriteLine("5. Quit");
+                Console.Write("Choose an Option: ");
 
                 var option = Console.ReadLine();
 
@@ -258,7 +285,7 @@ namespace CMDSpotifyClient.Presentation
                         exit = true;
                         break;
                     default:
-                        Console.WriteLine("Ungültige Option, bitte erneut versuchen.");
+                        Console.WriteLine("Wrong Option, please try again.");
                         Console.ReadKey();
                         break;
                 }
