@@ -4,48 +4,21 @@ using CMDSpotifyClient.UseCases.Interfaces;
 using CMDSpotifyClient.Responses;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using CMDSpotifyClient.Repository.Interfaces;
 
 namespace CMDSpotifyClient.UseCases
 {
     //Search Use Cases
     public class SearchTrackUseCase : ISearchTrackUseCase
     {
-        private readonly ISpotifySearchAdapter _spotifySearchAdapter;
-        public SearchTrackUseCase(ISpotifySearchAdapter spotifySearchAdapter)
+        private readonly ITrackRepository _trackRepository;
+        public SearchTrackUseCase(ITrackRepository trackRepository)
         {
-            _spotifySearchAdapter = spotifySearchAdapter;
+            _trackRepository = trackRepository;
         }
         public async Task<List<Track>> ExecuteAsync(string trackName)
         {
-            var jsonResult = await _spotifySearchAdapter.SearchTrackAsync(trackName);
-            var response = JsonConvert.DeserializeObject<JSONResponses.SearchForItem.Rootobject>(jsonResult);
-            var tracks = new List<Track>();
-            foreach (var trackItem in response.tracks.items)
-            {
-                var track = new Track
-                {
-                    Id = trackItem.id,
-                    Name = trackItem.name,
-                    Artists = trackItem.artists.Select(artist => new Artist
-                    {
-                        Id = artist.id,
-                        Name = artist.name
-                    }).ToList(),
-                    //DurationMs = trackItem.duration_ms,
-                    //Explicit = trackItem._explicit,
-                    //Album = new Album
-                    //{
-                    //    Id = trackItem.album.id,
-                    //    Name = trackItem.album.name,
-                    //},
-                    //PreviewUrl = trackItem.preview_url,
-                    //Popularity = trackItem.popularity,
-                };
-
-                tracks.Add(track);
-            }
-
-            return tracks;
+            return await _trackRepository.SearchTracksAsync(trackName);
         }
     }
 

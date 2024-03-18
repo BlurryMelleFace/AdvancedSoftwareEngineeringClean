@@ -9,6 +9,8 @@ using CMDSpotifyClient.Infrastructure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Http;
 using CMDSpotifyClientCleanArchitecture.Controller;
+using CMDSpotifyClient.Repository.Interfaces;
+using CMDSpotifyClient.Repository;
 
 //Rechtsklicken Sie auf Ihr Projekt im Solution Explorer, wählen Sie "Manage NuGet Packages...", und suchen Sie dann nach den oben genannten Paketen, um sie zu installieren.
 //package Microsoft.Extensions.Hosting
@@ -64,8 +66,10 @@ builder.ConfigureServices((hostContext, services) =>
     //services.AddTransient<GetAlbumScreen>();
     //services.AddTransient<GetGenrePlaylistScreen>();
 
-    services.RemoveAll<IHttpMessageHandlerBuilderFilter>();
+    // Registrieren der Repository-Klassen
+    services.AddScoped<ITrackRepository, TrackRepository>();
 
+    services.RemoveAll<IHttpMessageHandlerBuilderFilter>();
 });
 
 var app = builder.Build();
