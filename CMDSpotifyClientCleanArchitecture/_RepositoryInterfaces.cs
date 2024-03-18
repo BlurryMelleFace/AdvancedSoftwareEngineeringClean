@@ -7,16 +7,16 @@ namespace CMDSpotifyClient.Repository.Interfaces
     {
         Task<List<Track>> SearchTracksAsync(string trackName);
         Task<List<Artist>> SearchArtistsAsync(string artistName);
-        Task<List<Album>> SearchAlbumAsync(string artistName);
+        Task<List<Album>> SearchAlbumsAsync(string albumName);
         Task<List<Playlist>> SearchGenrePlaylistsAsync(string genreName);
     }
 
     // Get Interfaces
     public interface IRetrievalRepository
     {
-        Task<Track> GetTrackAsync(string trackId);
-        Task<Artist> GetArtistAsync(string artistId);
-        Task<Album> GetAlbumAsync(string albumId);
-        Task<Playlist> GetGenrePlaylistAsync(string playlistId);
+        Task<List<Track>> GetTrackAsync(string trackId);
+        Task<List<Artist>> GetArtistAsync(string artistId);
+        Task<List<Album>> GetAlbumAsync(string albumId);
+        Task<List<Playlist>> GetGenrePlaylistAsync(string playlistId);
     }
 }

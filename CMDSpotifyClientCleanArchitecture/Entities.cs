@@ -19,12 +19,14 @@
         public string Name { get; set; }
         public int Followers { get; set; }
         public string Genre { get; set; }
+        public string Popularity { get; set; }
     }
 
     public class Album
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public int TotalTracks { get; set; }   
         public DateTime ReleaseDate { get; set; }
         public List<Track> Tracks { get; set; } = new List<Track>();
         public List<Artist> Artists { get; set; } = new List<Artist>();
@@ -33,6 +35,7 @@
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; } 
         public List<Track> Tracks { get; set; } = new List<Track>();
     }
 }

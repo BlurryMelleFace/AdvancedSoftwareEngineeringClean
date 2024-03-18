@@ -24,6 +24,9 @@ builder.ConfigureServices((hostContext, services) =>
     // Registriere HTTP Client für die SpotifyAdapter
     services.AddHttpClient<ISpotifySearchAdapter, SpotifyAdapter>();
     services.AddHttpClient<ISpotifyDataRetrievalAdapter, SpotifyAdapter>();
+    // Registrierte Repository-Klassen
+    services.AddScoped<ISearchRepository, SearchRepository>();
+    services.AddScoped<IRetrievalRepository, RetrievalRepository>();
 
     // Registrieren Sie HttpClient für SpotifyCredentials
     services.AddHttpClient<SpotifyCredentials>().ConfigureHttpClient(client =>
@@ -48,9 +51,9 @@ builder.ConfigureServices((hostContext, services) =>
     services.AddTransient<ISearchGenrePlaylistUseCase, SearchGenrePlaylistUseCase>();
     // Registrierte Get Use Cases
     services.AddTransient<IGetTrackUseCase, GetTrackUseCase>();
-    //1services.AddTransient<IGetArtistUseCase, GetArtistUseCase>();
-    //services.AddTransient<IGetAlbumUseCase, GetAlbumUseCase>();
-    //services.AddTransient<IGetGenrePlaylistUseCase, GetGenrePlaylistUseCase>();
+    services.AddTransient<IGetArtistUseCase, GetArtistUseCase>();
+    services.AddTransient<IGetAlbumUseCase, GetAlbumUseCase>();
+    services.AddTransient<IGetGenrePlaylistUseCase, GetGenrePlaylistUseCase>();
     services.AddTransient<Controller>();
 
     // Registrierte Menu Präsentationsschicht
@@ -66,9 +69,7 @@ builder.ConfigureServices((hostContext, services) =>
     //services.AddTransient<GetAlbumScreen>();
     //services.AddTransient<GetGenrePlaylistScreen>();
 
-    // Registrieren der Repository-Klassen
-    services.AddScoped<ITrackRepository, TrackRepository>();
-
+    //Delete CMD MEssages
     services.RemoveAll<IHttpMessageHandlerBuilderFilter>();
 });
 

@@ -6,11 +6,11 @@ using Newtonsoft.Json;
 
 namespace CMDSpotifyClient.Repository
 {
-    public class TrackRepository : ITrackRepository
+    public class SearchRepository : ISearchRepository
     {
         private readonly ISpotifySearchAdapter _spotifySearchAdapter;
 
-        public TrackRepository(ISpotifySearchAdapter spotifySearchAdapter)
+        public SearchRepository(ISpotifySearchAdapter spotifySearchAdapter)
         {
             _spotifySearchAdapter = spotifySearchAdapter;
         }
@@ -31,15 +31,6 @@ namespace CMDSpotifyClient.Repository
                         Id = artist.id,
                         Name = artist.name
                     }).ToList(),
-                    //DurationMs = trackItem.duration_ms,
-                    //Explicit = trackItem._explicit,
-                    //Album = new Album
-                    //{
-                    //    Id = trackItem.album.id,
-                    //    Name = trackItem.album.name,
-                    //},
-                    //PreviewUrl = trackItem.preview_url,
-                    //Popularity = trackItem.popularity,
                 };
 
                 tracks.Add(track);
@@ -47,7 +38,154 @@ namespace CMDSpotifyClient.Repository
 
             return tracks;
         }
+        public async Task<List<Artist>> SearchArtistsAsync(string artistName)
+        {
+            var jsonResult = await _spotifySearchAdapter.SearchArtistAsync(artistName);
+            var response = JsonConvert.DeserializeObject<JSONResponses.SearchForItem.Rootobject>(jsonResult);
+            var Artists = new List<Artist>();
+            foreach (var artistItem in response.artists.items)
+            {
+                var artist = new Artist
+                {
+                    Id = artistItem.id,
+                    Name = artistItem.name,
+                };
+
+                Artists.Add(artist);
+            }
+
+            return Artists;
+        }
+        public async Task<List<Album>> SearchAlbumsAsync(string albumName)
+        {
+            var jsonResult = await _spotifySearchAdapter.SearchAlbumAsync(albumName);
+            var response = JsonConvert.DeserializeObject<JSONResponses.SearchForItem.Rootobject>(jsonResult);
+            var Albums = new List<Album>();
+            foreach (var albumItem in response.albums.items)
+            {
+                var album = new Album
+                {
+                    Id = albumItem.id,
+                    Name = albumItem.name,
+                    Artists = albumItem.artists.Select(artist => new Artist
+                    {
+                        Id = artist.id,
+                        Name = artist.name
+                    }).ToList(),
+                };
+
+                Albums.Add(album);
+            }
+
+            return Albums;
+        }
+        public async Task<List<Playlist>> SearchGenrePlaylistsAsync(string genreName)
+        {
+            var jsonResult = await _spotifySearchAdapter.SearchGenrePlaylistAsync(genreName);
+            var response = JsonConvert.DeserializeObject<JSONResponses.SearchForItem.Rootobject>(jsonResult);
+            var Playlists = new List<Playlist>();
+            foreach (var playlistItem in response.playlists.items)
+            {
+                var playlist = new Playlist
+                {
+                    Id = playlistItem.id,
+                    Name = playlistItem.name,
+                };
+
+                Playlists.Add(playlist);
+            }
+
+            return Playlists;
+        }
     }
 
-    // Implementierung weiterer Repositories analog
+    public class RetrievalRepository : IRetrievalRepository
+    {
+        private readonly ISpotifyDataRetrievalAdapter _spotifyDataRetrievalAdapter;
+
+        public RetrievalRepository(ISpotifyDataRetrievalAdapter spotifyDataRetrievalAdapter)
+        {
+            _spotifyDataRetrievalAdapter = spotifyDataRetrievalAdapter;
+        }
+
+        public async Task<List<Track>> GetTrackAsync(string trackId)
+        {
+            var jsonResult = await _spotifyDataRetrievalAdapter.GetTrackAsync(trackId);
+            var response = JsonConvert.DeserializeObject<JSONResponses.GetTrack.Rootobject>(jsonResult);
+            var tracks = new List<Track>();
+
+            var track = new Track
+            {
+                Id = response.id,
+                Name = response.name,
+                DurationMs = response.duration_ms,
+                Artists = response.artists.Select(artist => new Artist
+                {
+                    Id = artist.id,
+                    Name = artist.name
+                }).ToList(),
+                Popularity = response.popularity,
+            };
+
+            tracks.Add(track);
+
+            return tracks;
+        }
+        public async Task<List<Artist>> GetArtistAsync(string artistId)
+        {
+            var jsonResult = await _spotifyDataRetrievalAdapter.GetArtistAsync(artistId);
+            var response = JsonConvert.DeserializeObject<JSONResponses.GetArtists.Rootobject>(jsonResult);
+            var artists = new List<Artist>();
+            
+            foreach (var artist in response.artists)
+            {
+                var artist1 = new Artist
+                {
+                    Id = artist.id,
+                    Name = artist.name,
+                    Followers = artist.followers.total,
+
+                };
+
+                artists.Add(artist1);
+            }
+
+            return artists;
+        }
+        public async Task<List<Album>> GetAlbumAsync(string albumId)
+        {
+            var jsonResult = await _spotifyDataRetrievalAdapter.GetAlbumAsync(albumId);
+            var response = JsonConvert.DeserializeObject<JSONResponses.GetAlbum.Rootobject>(jsonResult);
+            var albums = new List<Album>();
+
+            var album = new Album
+            {
+                Id = response.id,
+                Name = response.name,
+                TotalTracks = response.total_tracks
+            };
+
+            albums.Add(album);
+
+            return albums;
+        }
+        public async Task<List<Playlist>> GetGenrePlaylistAsync(string playlistId)
+        {
+            var jsonResult = await _spotifyDataRetrievalAdapter.GetGenrePlaylistAsync(playlistId);
+            var response = JsonConvert.DeserializeObject<JSONResponses.GetPlaylist.Rootobject>(jsonResult);
+            var playlists = new List<Playlist>();
+
+            var playlist = new Playlist
+            {
+                Id = response.id,
+                Name = response.name,
+                Description = response.description
+
+            };
+
+            playlists.Add(playlist);
+
+            return playlists;
+        }
+    }
 }
