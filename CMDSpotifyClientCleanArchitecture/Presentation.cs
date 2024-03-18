@@ -150,7 +150,7 @@ namespace CMDSpotifyClient.Presentation
 
             try
             {
-                var playlists = await _controller.SearchGenrePlalyist(genreName);
+                var playlists = await _controller.SearchGenrePlayist(genreName);
                 foreach (var playlist in playlists)
                 {
                     Console.Clear();
