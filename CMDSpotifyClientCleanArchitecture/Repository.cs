@@ -163,7 +163,6 @@ namespace CMDSpotifyClient.Repository
                     Followers = artist.followers.total,
                     Popularity = artist.popularity,
                     Genre = artist.genres.ToList(),
-
                 };
 
                 artists.Add(artist1);

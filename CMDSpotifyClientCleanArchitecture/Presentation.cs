@@ -18,7 +18,8 @@ namespace CMDSpotifyClient.Presentation
         public async Task ShowAsync()
         {
             Console.Clear();
-            Console.WriteLine("Enter the name of the track you want to search for: ");
+            Console.WriteLine("Enter the name (and/or additional info) of the track you want to search for: ");
+            Console.WriteLine("\n");
             var trackName = Console.ReadLine();
             try
             {
@@ -45,6 +46,7 @@ namespace CMDSpotifyClient.Presentation
             Console.WriteLine("1. Show me the Track");
             Console.WriteLine("2. <--");
             Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
             var option = Console.ReadLine();
 
             try
@@ -78,7 +80,8 @@ namespace CMDSpotifyClient.Presentation
         public async Task ShowAsync()
         {
             Console.Clear();
-            Console.WriteLine("Enter the name of the artist you want to search for:");
+            Console.WriteLine("Enter the name (and/or additional info) of the artist you want to search for:");
+            Console.WriteLine("\n");
             var artistName = Console.ReadLine();
 
             try
@@ -105,6 +108,7 @@ namespace CMDSpotifyClient.Presentation
             Console.WriteLine("1. Show me the Artist");
             Console.WriteLine("2. <--");
             Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
             var option = Console.ReadLine();
 
             try
@@ -139,7 +143,8 @@ namespace CMDSpotifyClient.Presentation
         public async Task ShowAsync()
         {
             Console.Clear();
-            Console.WriteLine("Enter the name of the album you want to search for:");
+            Console.WriteLine("Enter the name (and/or additional info) of the album you want to search for:");
+            Console.WriteLine("\n");
             var albumName = Console.ReadLine();
 
             try
@@ -165,6 +170,7 @@ namespace CMDSpotifyClient.Presentation
             Console.WriteLine("1. Show me the Album");
             Console.WriteLine("2. <--");
             Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
             var option = Console.ReadLine();
 
             try
@@ -200,7 +206,8 @@ namespace CMDSpotifyClient.Presentation
         public async Task ShowAsync()
         {
             Console.Clear();
-            Console.WriteLine("Enter a genre for which you would like to listen to a playlist:");
+            Console.WriteLine("Enter a genre (and/or additional info) for which you would like to listen to a playlist:");
+            Console.WriteLine("\n");
             var genreName = Console.ReadLine();
 
             try
@@ -226,6 +233,7 @@ namespace CMDSpotifyClient.Presentation
             Console.WriteLine("1. Show me the Playlist");
             Console.WriteLine("2. <--");
             Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
             var option = Console.ReadLine();
 
             try
@@ -305,6 +313,7 @@ namespace CMDSpotifyClient.Presentation
             Console.WriteLine("1. Preview Track");
             Console.WriteLine("2. <--");
             Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
             var option = Console.ReadLine();
 
             try
@@ -370,6 +379,7 @@ namespace CMDSpotifyClient.Presentation
             Console.WriteLine("\n");
             Console.WriteLine("1. <--");
             Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
             var option = Console.ReadLine();
 
             try
@@ -438,6 +448,7 @@ namespace CMDSpotifyClient.Presentation
             Console.WriteLine("\n");
             Console.WriteLine("1. <--");
             Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
             var option = Console.ReadLine();
 
             try
@@ -500,6 +511,7 @@ namespace CMDSpotifyClient.Presentation
             Console.WriteLine("\n");
             Console.WriteLine("1. <--");
             Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
             var option = Console.ReadLine();
 
             try
@@ -577,11 +589,13 @@ namespace CMDSpotifyClient.Presentation
                 Console.Clear();
                 Console.WriteLine("\x1b[3J"); //Clear Entire Console
                 Console.WriteLine("Main Menu");
+                Console.WriteLine("\n");
                 Console.WriteLine("1. Search a Track");
                 Console.WriteLine("2. Search an Artist");
                 Console.WriteLine("3. Search an Album");
                 Console.WriteLine("4. Search a Genre");
                 Console.WriteLine("5. Quit");
+                Console.WriteLine("\n");
                 Console.Write("Choose an Option: ");
 
                 var option = Console.ReadLine();
