@@ -8,10 +8,9 @@ namespace CMDSpotifyClient.Responses
 {
     public class JSONResponses
     {
-
+        //Search JSON Responses
         public class SearchForItem
         {
-
             public class Rootobject
             {
                 public Tracks tracks { get; set; }
@@ -504,6 +503,7 @@ namespace CMDSpotifyClient.Responses
 
         }
 
+        //Get JSON Responses
         public class GetTrack
         {
             public class Rootobject
@@ -822,145 +822,8 @@ namespace CMDSpotifyClient.Responses
 
         }
 
-        public class GetAdditionalTrackInfo
-        {
-
-            public class Rootobject
-            {
-                public float acousticness { get; set; }
-                public string analysis_url { get; set; }
-                public float danceability { get; set; }
-                public int duration_ms { get; set; }
-                public float energy { get; set; }
-                public string id { get; set; }
-                public float instrumentalness { get; set; }
-                public int key { get; set; }
-                public float liveness { get; set; }
-                public float loudness { get; set; }
-                public int mode { get; set; }
-                public float speechiness { get; set; }
-                public float tempo { get; set; }
-                public int time_signature { get; set; }
-                public string track_href { get; set; }
-                public string type { get; set; }
-                public string uri { get; set; }
-                public float valence { get; set; }
-            }
-
-        }
-
-        public class GetArtistAlbums
-        {
-
-            public class Rootobject
-            {
-                public string href { get; set; }
-                public int limit { get; set; }
-                public string next { get; set; }
-                public int offset { get; set; }
-                public string previous { get; set; }
-                public int total { get; set; }
-                public Item[] items { get; set; }
-            }
-
-            public class Item
-            {
-                public string album_type { get; set; }
-                public int total_tracks { get; set; }
-                public string[] available_markets { get; set; }
-                public External_Urls external_urls { get; set; }
-                public string href { get; set; }
-                public string id { get; set; }
-                public Image[] images { get; set; }
-                public string name { get; set; }
-                public string release_date { get; set; }
-                public string release_date_precision { get; set; }
-                public Restrictions restrictions { get; set; }
-                public string type { get; set; }
-                public string uri { get; set; }
-                public Artist[] artists { get; set; }
-                public string album_group { get; set; }
-            }
-
-            public class External_Urls
-            {
-                public string spotify { get; set; }
-            }
-
-            public class Restrictions
-            {
-                public string reason { get; set; }
-            }
-
-            public class Image
-            {
-                public string url { get; set; }
-                public int height { get; set; }
-                public int width { get; set; }
-            }
-
-            public class Artist
-            {
-                public External_Urls1 external_urls { get; set; }
-                public string href { get; set; }
-                public string id { get; set; }
-                public string name { get; set; }
-                public string type { get; set; }
-                public string uri { get; set; }
-            }
-
-            public class External_Urls1
-            {
-                public string spotify { get; set; }
-            }
-
-        }
-
-        public class GetArtistRelatedArtists
-        {
-
-            public class Rootobject
-            {
-                public Artist[] artists { get; set; }
-            }
-
-            public class Artist
-            {
-                public External_Urls external_urls { get; set; }
-                public Followers followers { get; set; }
-                public string[] genres { get; set; }
-                public string href { get; set; }
-                public string id { get; set; }
-                public Image[] images { get; set; }
-                public string name { get; set; }
-                public int popularity { get; set; }
-                public string type { get; set; }
-                public string uri { get; set; }
-            }
-
-            public class External_Urls
-            {
-                public string spotify { get; set; }
-            }
-
-            public class Followers
-            {
-                public string href { get; set; }
-                public int total { get; set; }
-            }
-
-            public class Image
-            {
-                public string url { get; set; }
-                public int height { get; set; }
-                public int width { get; set; }
-            }
-
-        }
-
         public class GetPlaylist
         {
-
             public class Rootobject
             {
                 public bool collaborative { get; set; }

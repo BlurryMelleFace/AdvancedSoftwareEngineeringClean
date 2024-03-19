@@ -10,7 +10,7 @@
 
     public interface ISpotifyDataRetrievalAdapter
     {
-        Task<string> GetTrackAsync(string trackId);
+        Task<string> GetTrackAsync(string trackId); 
         Task<string> GetAlbumAsync(string albumId);
         Task<string> GetArtistAsync(string artistId);
         Task<string> GetGenrePlaylistAsync(string playlistId);

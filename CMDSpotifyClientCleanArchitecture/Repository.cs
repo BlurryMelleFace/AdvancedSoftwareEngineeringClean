@@ -14,7 +14,6 @@ namespace CMDSpotifyClient.Repository
         {
             _spotifySearchAdapter = spotifySearchAdapter;
         }
-
         public async Task<List<Track>> SearchTracksAsync(string trackName)
         {
             var jsonResult = await _spotifySearchAdapter.SearchTrackAsync(trackName);
@@ -153,7 +152,7 @@ namespace CMDSpotifyClient.Repository
             var jsonResult = await _spotifyDataRetrievalAdapter.GetArtistAsync(artistId);
             var response = JsonConvert.DeserializeObject<JSONResponses.GetArtists.Rootobject>(jsonResult);
             var artists = new List<Artist>();
-            
+
             foreach (var artist in response.artists)
             {
                 var artist1 = new Artist

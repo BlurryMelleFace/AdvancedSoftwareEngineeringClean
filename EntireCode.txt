@@ -1,0 +1,2438 @@
+namespace CMDSpotifyClient.InterfaceAdapters.Interfaces
+{
+    public interface ISpotifySearchAdapter
+    {
+        Task<string> SearchTrackAsync(string trackName);
+        Task<string> SearchAlbumAsync(string albumName);
+        Task<string> SearchArtistAsync(string artistName);
+        Task<string> SearchGenrePlaylistAsync(string genreName);
+    }
+
+    public interface ISpotifyDataRetrievalAdapter
+    {
+        Task<string> GetTrackAsync(string trackId); 
+        Task<string> GetAlbumAsync(string albumId);
+        Task<string> GetArtistAsync(string artistId);
+        Task<string> GetGenrePlaylistAsync(string playlistId);
+    }
+}
+using CMDSpotifyClient.Entities;
+
+namespace CMDSpotifyClient.Repository.Interfaces
+{
+    // Search Interfaces
+    public interface ISearchRepository
+    {
+        Task<List<Track>> SearchTracksAsync(string trackName);
+        Task<List<Artist>> SearchArtistsAsync(string artistName);
+        Task<List<Album>> SearchAlbumsAsync(string albumName);
+        Task<List<Playlist>> SearchGenrePlaylistsAsync(string genreName);
+    }
+
+    // Get Interfaces
+    public interface IRetrievalRepository
+    {
+        Task<List<Track>> GetTrackAsync(string trackId);
+        Task<List<Artist>> GetArtistAsync(string artistId);
+        Task<List<Album>> GetAlbumAsync(string albumId);
+        Task<List<Playlist>> GetGenrePlaylistAsync(string playlistId);
+    }
+}
+using CMDSpotifyClient.Entities;
+
+namespace CMDSpotifyClient.UseCases.Interfaces
+{
+    //Search Use Case Interfaces
+    public interface ISearchTrackUseCase
+    {
+        Task<List<Track>> ExecuteAsync(string trackName);
+    }
+    public interface ISearchArtistUseCase
+    {
+        Task<List<Artist>> ExecuteAsync(string artistName);
+    }
+    public interface ISearchAlbumUseCase
+    {
+        Task<List<Album>> ExecuteAsync(string albumName);
+    }
+    public interface ISearchGenrePlaylistUseCase
+    {
+        Task<List<Playlist>> ExecuteAsync(string genreName);
+    }
+    //Get Use Case Interfaces
+    public interface IGetTrackUseCase
+    {
+        Task<List<Track>> ExecuteAsync(string trackId);
+    }
+    public interface IGetArtistUseCase
+    {
+        Task<List<Artist>> ExecuteAsync(string artistId);
+    }
+    public interface IGetAlbumUseCase
+    {
+        Task<List<Album>> ExecuteAsync(string albumId);
+    }
+    public interface IGetGenrePlaylistUseCase
+    {
+        Task<List<Playlist>> ExecuteAsync(string playlistId);
+    }
+
+}
+using CMDSpotifyClient.Entities;
+using CMDSpotifyClient.UseCases.Interfaces;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace CMDSpotifyClientCleanArchitecture.Controller
+{
+    public class Controller
+    {
+        private readonly ISearchTrackUseCase _searchTrackUseCase;
+        private readonly ISearchArtistUseCase _searchArtistUseCase;
+        private readonly ISearchAlbumUseCase _searchAlbumUseCase;
+        private readonly ISearchGenrePlaylistUseCase _searchGenrePlaylistUseCase;
+        private readonly IGetTrackUseCase _getTrackUseCase;
+        private readonly IGetArtistUseCase _getArtistUseCase;
+        private readonly IGetAlbumUseCase _getAlbumUseCase;
+        private readonly IGetGenrePlaylistUseCase _getGenrePlaylistUseCase;
+
+        public Controller(
+            ISearchTrackUseCase searchTrackUseCase,
+            ISearchArtistUseCase searchArtistUseCase,
+            ISearchAlbumUseCase searchAlbumUseCase,
+            ISearchGenrePlaylistUseCase searchGenrePlaylistUseCase,
+            IGetTrackUseCase getTrackUseCase,
+            IGetArtistUseCase getArtistUseCase,
+            IGetAlbumUseCase getAlbumUseCase,
+            IGetGenrePlaylistUseCase getGenrePlaylistUseCase)
+        {
+            _searchTrackUseCase = searchTrackUseCase;
+            _searchArtistUseCase = searchArtistUseCase;
+            _searchAlbumUseCase = searchAlbumUseCase;
+            _searchGenrePlaylistUseCase = searchGenrePlaylistUseCase;
+            _getTrackUseCase = getTrackUseCase;
+            _getArtistUseCase = getArtistUseCase;
+            _getAlbumUseCase = getAlbumUseCase;
+            _getGenrePlaylistUseCase = getGenrePlaylistUseCase;
+        }
+        // Search Use Cases
+        public Task<List<Track>> SearchTrack(string trackName)
+        {
+            return _searchTrackUseCase.ExecuteAsync(trackName);
+        }
+        public Task<List<Artist>> SearchArtist(string artistName)
+        {
+            return _searchArtistUseCase.ExecuteAsync(artistName);
+        }
+        public Task<List<Album>> SearchAlbum(string albumName)
+        {
+            return _searchAlbumUseCase.ExecuteAsync(albumName);
+        }
+        public Task<List<Playlist>> SearchGenrePlayist(string genreName)
+        {
+            return _searchGenrePlaylistUseCase.ExecuteAsync(genreName);
+        }
+        // Get Use Cases 
+        public Task<List<Track>> GetTrack(string trackId)
+        {
+            return _getTrackUseCase.ExecuteAsync(trackId);
+        }
+
+        public Task<List<Artist>> GetArtist(string artistId)
+        {
+            return _getArtistUseCase.ExecuteAsync(artistId);
+        }
+
+        public Task<List<Album>> GetAlbum(string albumId)
+        {
+            return _getAlbumUseCase.ExecuteAsync(albumId);
+        }
+
+        public Task<List<Playlist>> GetGenrePlaylist(string playlistId)
+        {
+            return _getGenrePlaylistUseCase.ExecuteAsync(playlistId);
+        }
+    }
+}
+namespace CMDSpotifyClient.Entities
+{
+    //Entities: Die innerste Schicht, die die Geschäftslogik und Geschäftsregeln enthält.
+    public class Track
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string DurationMin { get; set; }
+        public bool Explicit { get; set; }
+        public string PreviewUrl { get; set; }
+        public List<Artist> Artists { get; set; } = new List<Artist>();
+        public Album Album { get; set; }
+        public int Popularity { get; set; }
+        public int TrackNumber { get; set; }
+        public string Type { get; set; }
+
+    }
+
+    public class Artist
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public int Followers { get; set; }
+        public List<string> Genre { get; set; }
+        public int Popularity { get; set; }
+    }
+
+    public class Album
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public int TotalTracks { get; set; }
+        public string ReleaseDate { get; set; }
+        public int Popularity { get; set; }
+        public string Label { get; set; }
+        public List<Track> Tracks { get; set; } = new List<Track>();
+        public List<Artist> Artists { get; set; } = new List<Artist>();
+    }
+    public class Playlist
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public List<Track> Tracks { get; set; } = new List<Track>();
+        public int Followers { get; set; }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace CMDSpotifyClient.Infrastructure
+{
+    public class SpotifyCredentials
+    {
+        private readonly HttpClient _httpClient;
+        private readonly string _clientId;
+        private readonly string _clientSecret;
+        private string _accessToken;
+        private DateTime _tokenExpiration = DateTime.UtcNow;
+
+        public SpotifyCredentials(HttpClient httpClient, string clientId, string clientSecret)
+        {
+            _httpClient = httpClient;
+            _clientId = clientId;
+            _clientSecret = clientSecret;
+        }
+
+        public async Task<string> EnsureAccessTokenAsync()
+        {
+            if (!string.IsNullOrEmpty(_accessToken) && DateTime.UtcNow < _tokenExpiration)
+            {
+                return _accessToken;
+            }
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://accounts.spotify.com/api/token");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"{_clientId}:{_clientSecret}")));
+            request.Content = new FormUrlEncodedContent(new Dictionary<string, string> { { "grant_type", "client_credentials" } });
+
+            var response = await _httpClient.SendAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var tokenData = JsonSerializer.Deserialize<JsonElement>(json);
+                _accessToken = tokenData.GetProperty("access_token").GetString();
+                var expiresIn = tokenData.GetProperty("expires_in").GetInt32();
+                _tokenExpiration = DateTime.UtcNow.AddSeconds(expiresIn - 300); // Renew token 5 minutes early
+                return _accessToken;
+            }
+            else
+            {
+                throw new HttpRequestException($"Failed to retrieve Spotify access token: {response.StatusCode}");
+            }
+        }
+    }
+}
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using CMDSpotifyClient.Entities;
+using CMDSpotifyClient.Infrastructure;
+using CMDSpotifyClient.InterfaceAdapters.Interfaces;
+
+namespace CMDSpotifyClient.InterfaceAdapters
+{
+    public class SpotifyAdapter : ISpotifySearchAdapter, ISpotifyDataRetrievalAdapter
+    {
+        private readonly HttpClient _httpClient;
+        private readonly SpotifyCredentials _spotifyCredentials;
+        private const string BaseSpotifyUrl = "https://api.spotify.com/v1";
+
+        public SpotifyAdapter(HttpClient httpClient, SpotifyCredentials spotifyCredentials)
+        {
+            _httpClient = httpClient;
+            _spotifyCredentials = spotifyCredentials;
+        }
+
+        private async Task<string> GetAuthorizedContentAsync(string uri)
+        {
+            var accessToken = await _spotifyCredentials.EnsureAccessTokenAsync();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var response = await _httpClient.GetAsync(uri);
+            if (!response.IsSuccessStatusCode)  
+            {
+                throw new HttpRequestException($"Spotify API returned error: {response.StatusCode}");
+            }
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        public Task<string> SearchTrackAsync(string trackName) =>
+            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/search?q={Uri.EscapeDataString(trackName)}&type=track&limit=1");
+
+        public Task<string> SearchAlbumAsync(string albumName) =>
+            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/search?q={Uri.EscapeDataString(albumName)}&type=album&limit=1");
+
+        public Task<string> SearchArtistAsync(string artistName) =>
+            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/search?q={Uri.EscapeDataString(artistName)}&type=artist&limit=1");
+
+        public Task<string> SearchGenrePlaylistAsync(string genreName) =>
+            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/search?q={Uri.EscapeDataString(genreName)}&type=playlist&limit=1");
+
+        public Task<string> GetTrackAsync(string trackId) =>
+            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/tracks/{trackId}");
+
+        public Task<string> GetAlbumAsync(string albumId) =>
+            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/albums/{albumId}");
+
+        public Task<string> GetArtistAsync(string artistId) =>
+            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/artists?ids={artistId}");
+
+        public Task<string> GetGenrePlaylistAsync(string playlistId) =>
+            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/playlists/{playlistId}");
+    }
+}
+using CMDSpotifyClient.UseCases.Interfaces;
+using CMDSpotifyClientCleanArchitecture.Controller;
+using System.Diagnostics;
+using NAudio.Wave;
+
+namespace CMDSpotifyClient.Presentation
+{
+    //Search Pages
+    public class SearchTrackScreen
+    {
+        private Controller _controller;
+        private List<string> _listOfTrackIds;
+        public SearchTrackScreen(Controller controller)
+        {
+            _controller = controller;
+            _listOfTrackIds = new List<string>();
+        }
+        public async Task ShowAsync()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter the name (and/or additional info) of the track you want to search for: ");
+            Console.WriteLine("\n");
+            var trackName = Console.ReadLine();
+            try
+            {
+                Console.Clear();
+                Console.WriteLine("Suggestion based on your search query");
+                Console.WriteLine("\n");
+                var tracks = await _controller.SearchTrack(trackName);
+                foreach (var track in tracks)
+                {
+                    Console.WriteLine($"Found Track: {track.Name} - {string.Join(", ", track.Artists.Select(a => a.Name))}");
+                    Console.WriteLine($"SpotifyID: {track.Id}");
+                    Console.WriteLine("\n");
+
+                    _listOfTrackIds.Add(track.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+
+            Console.WriteLine("\n");
+            Console.WriteLine("1. Show me the Track");
+            Console.WriteLine("2. <--");
+            Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
+                        var GetTrackScreen = new GetTrackScreen(_controller, _listOfTrackIds);
+                        await GetTrackScreen.ShowAsync();
+                        break;
+                    case "2":
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+        }
+    }
+    public class SearchArtistScreen
+    {
+        private Controller _controller;
+        private List<string> _listOfArtistIds;
+        public SearchArtistScreen(Controller controller)
+        {
+            _controller = controller;
+            _listOfArtistIds = new List<string>();  
+        }
+        public async Task ShowAsync()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter the name (and/or additional info) of the artist you want to search for:");
+            Console.WriteLine("\n");
+            var artistName = Console.ReadLine();
+
+            try
+            {
+                Console.Clear();
+                Console.WriteLine("Suggestion based on your search query");
+                Console.WriteLine("\n");
+                var artists = await _controller.SearchArtist(artistName);
+                foreach (var artist in artists)
+                {
+                    Console.WriteLine($"Gefunden: {artist.Name}");
+                    Console.WriteLine($"SpotifyID: {artist.Id}");
+                    Console.WriteLine("\n");
+                    _listOfArtistIds.Add(artist.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+
+            Console.WriteLine("\n");
+            Console.WriteLine("1. Show me the Artist");
+            Console.WriteLine("2. <--");
+            Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
+                        var GetArtistScreen = new GetArtistScreen(_controller, _listOfArtistIds);
+                        await GetArtistScreen.ShowAsync();
+                        break;
+                    case "2":
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+        }
+    }
+    public class SearchAlbumScreen
+    {
+        private readonly Controller _controller;
+        private List<string> _listOfAlbumIds;
+
+        public SearchAlbumScreen(Controller controller)
+        {
+            _controller = controller;
+            _listOfAlbumIds = new List<string>();   
+        }
+        public async Task ShowAsync()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter the name (and/or additional info) of the album you want to search for:");
+            Console.WriteLine("\n");
+            var albumName = Console.ReadLine();
+
+            try
+            {
+                Console.Clear();
+                Console.WriteLine("Suggestion based on your search query");
+                Console.WriteLine("\n");
+                var albums = await _controller.SearchAlbum(albumName);
+                foreach (var album in albums)
+                {
+                    Console.WriteLine($"Found Album: {album.Name} -  {string.Join(", ", album.Artists.Select(a => a.Name))}");
+                    Console.WriteLine($"SpotifyID: {album.Id}");
+                    Console.WriteLine("\n");
+                    _listOfAlbumIds.Add(album.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+            Console.WriteLine("\n");
+            Console.WriteLine("1. Show me the Album");
+            Console.WriteLine("2. <--");
+            Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
+                        var GetAlbumScreen = new GetAlbumScreen(_controller, _listOfAlbumIds);
+                        await GetAlbumScreen.ShowAsync();
+                        break;
+                    case "2":
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+
+        }
+    }
+    public class SearchGenrePlaylistScreen
+    {
+        private readonly Controller _controller;
+        private List<string> _listOfPlaylistIds;
+
+        public SearchGenrePlaylistScreen(Controller controller)
+        {
+            _controller = controller;
+            _listOfPlaylistIds = new List<string>();
+        }
+        public async Task ShowAsync()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter a genre (and/or additional info) for which you would like to listen to a playlist:");
+            Console.WriteLine("\n");
+            var genreName = Console.ReadLine();
+
+            try
+            {
+                Console.Clear();
+                Console.WriteLine("Suggestion based on your search query");
+                Console.WriteLine("\n");
+                var playlists = await _controller.SearchGenrePlayist(genreName);
+                foreach (var playlist in playlists)
+                {
+                    Console.WriteLine($"Found: {playlist.Name}");
+                    Console.WriteLine($"SpotifyID: {playlist.Id}");
+                    Console.WriteLine("\n");
+                    _listOfPlaylistIds.Add(playlist.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+            Console.WriteLine("\n");
+            Console.WriteLine("1. Show me the Playlist");
+            Console.WriteLine("2. <--");
+            Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
+                        var GetGenrePlaylistScreen = new GetGenrePlaylistScreen(_controller, _listOfPlaylistIds);
+                        await GetGenrePlaylistScreen.ShowAsync();
+                        break;
+                    case "2":
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+
+        }
+    }
+    //Get Pages
+
+    public class GetTrackScreen
+    {
+        private Controller _controller;
+        private readonly List<string> _listOfTrackIds;
+        private string _previewUrl;
+
+        public GetTrackScreen(Controller controller, List<string> listOfTrackIds)
+        {
+            _controller = controller;
+            _listOfTrackIds = listOfTrackIds;
+            _previewUrl = string.Empty; 
+        }
+        public async Task ShowAsync()
+        {
+            Console.Clear();
+           
+            try
+            {
+                foreach (var trackId in _listOfTrackIds)
+                {
+                    var tracks = await _controller.GetTrack(trackId);
+                    foreach (var track in tracks)
+                    {
+                        Console.WriteLine($"Name of The Track: {track.Name}");
+                        int i = 1;
+                        foreach (var artist in track.Artists)
+                        {
+                            Console.WriteLine($"Artist {i}: {artist.Name}");
+                            i++;
+                        }
+                        Console.WriteLine("\n");
+                        Console.WriteLine($"SpotifyID: {track.Id}");
+                        Console.WriteLine($"Duration in Min: {track.DurationMin}");
+                        Console.WriteLine($"Popularity: {track.Popularity}");
+                        Console.WriteLine($"Explicit: {track.Explicit}");
+                        Console.WriteLine($"Name Of the Corresponding Album: {track.Album.Name}");
+                        Console.WriteLine($"Album Release date: {track.Album.ReleaseDate}");
+                        Console.WriteLine($"Total Tracks in Album: {track.Album.TotalTracks}");
+                        Console.WriteLine($"Track Position in Album: {track.TrackNumber}");
+                        Console.WriteLine($"Type: {track.Type}");
+                        _previewUrl = track.PreviewUrl;
+                        Console.WriteLine("\n");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+
+            Console.WriteLine("\n");
+            Console.WriteLine("1. Preview Track");
+            Console.WriteLine("2. <--");
+            Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
+                        var PlayTrackScreen = new PlayTrackScreen(_controller,_previewUrl);
+                        PlayTrackScreen.ShowAsync();
+                        break;
+                    case "2":
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+        }
+    }
+    public class GetArtistScreen
+    {
+        private Controller _controller;
+        private readonly List<string> _listOfArtistIds;
+
+        public GetArtistScreen(Controller controller, List<string> listOfArtistIds)
+        {
+            _controller = controller;
+            _listOfArtistIds = listOfArtistIds;
+        }
+        public async Task ShowAsync()
+        {
+            Console.Clear();
+
+            try
+            {
+                foreach (var artistId in _listOfArtistIds)
+                {
+                    var artists = await _controller.GetArtist(artistId);
+                    foreach (var artist in artists)
+                    {
+                        Console.WriteLine($"Name of The Artist: {artist.Name}");
+                        Console.WriteLine("\n");
+                        Console.WriteLine($"SpotifyID: {artist.Id}");
+                        Console.WriteLine($"Followers: {artist.Followers}");
+                        Console.WriteLine($"Popularity: {artist.Popularity}");
+                        int i = 1;  
+                        foreach (var genre in artist.Genre)
+                        {
+                            Console.WriteLine($"Genre {i}: {genre}");
+                            i++;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+
+            Console.WriteLine("\n");
+            Console.WriteLine("1. <--");
+            Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+        }
+    }
+    public class GetAlbumScreen
+    {
+        private Controller _controller;
+        private readonly List<string> _listOfAlbumIds;
+
+        public GetAlbumScreen(Controller controller, List<string> listOfAlbumIds)
+        {
+            _controller = controller;
+            _listOfAlbumIds = listOfAlbumIds;
+        }
+        public async Task ShowAsync()
+        {
+            Console.Clear();
+
+            try
+            {
+                foreach (var albumId in _listOfAlbumIds)
+                {
+                    var albums = await _controller.GetAlbum(albumId);
+                    foreach (var album in albums)
+                    {
+                        Console.WriteLine($"Name of The Album: {album.Name}");
+                        Console.WriteLine("\n");
+                        Console.WriteLine($"Album Release Date: {album.ReleaseDate}");
+                        Console.WriteLine($"Album Label: {album.Label}");
+                        Console.WriteLine($"Album Popularity: {album.Popularity}");
+                        int i = 1;
+                        foreach (var artist in album.Artists)
+                        {
+                            Console.WriteLine($"Artist Name / Id: {i}: {artist.Name} - {artist.Id}");
+                            i++;
+                        }
+                        Console.WriteLine("\n");
+                        int ii = 1;
+                        foreach (var tracks in album.Tracks)
+                        {
+                            Console.WriteLine($"Track Name / Id: {ii}: {tracks.Name} - {tracks.Id}");
+                            ii++;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+
+            Console.WriteLine("\n");
+            Console.WriteLine("1. <--");
+            Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+        }
+    }
+    public class GetGenrePlaylistScreen
+    {
+        private Controller _controller;
+        private readonly List<string> _listOfPlaylistIds;
+
+        public GetGenrePlaylistScreen(Controller controller, List<string> listOfPlaylistIds)
+        {
+            _controller = controller;
+            _listOfPlaylistIds = listOfPlaylistIds;
+        }
+        public async Task ShowAsync()
+        {
+            Console.Clear();
+
+            try
+            {
+                foreach (var playlistId in _listOfPlaylistIds)
+                {
+                    var playlists = await _controller.GetGenrePlaylist(playlistId);
+                    foreach (var playlist in playlists)
+                    {
+                        Console.WriteLine($"Name of The Playlist: {playlist.Name}");
+                        Console.WriteLine($"SpotifyID: {playlist.Id}");
+                        Console.WriteLine("\n");
+                        Console.WriteLine($"Description of the Playlist: {playlist.Description}");
+                        Console.WriteLine($"Playlist Followers: {playlist.Followers}");
+                        Console.WriteLine("\n");
+                        int i = 0;
+                        foreach (var track in playlist.Tracks)
+                        {
+                            Console.WriteLine($"Track Name / Id: {i}: {track.Name} - {track.Id}");
+                            i++;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+
+            Console.WriteLine("\n");
+            Console.WriteLine("1. <--");
+            Console.WriteLine("\n");
+            Console.Write("Choose an Option: ");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+        }
+    }
+    // Play Track Screen
+    public class PlayTrackScreen
+    {
+        private Controller _controller;
+        private string _previewUrl;
+        public PlayTrackScreen(Controller controller, string previewUrl)
+        {
+            _controller = controller;
+            _previewUrl = previewUrl;
+        }
+        public void ShowAsync()
+        {
+            string audioUrl = _previewUrl;
+            try
+            {
+                if (audioUrl == null)
+                {
+                    Console.WriteLine("Audio URL is null.");
+                    Console.ReadLine();
+                }
+                using (var webStream = new MediaFoundationReader(audioUrl))
+                using (var outputDevice = new WaveOutEvent())
+                {
+                    outputDevice.Init(webStream);
+                    outputDevice.Play();
+
+                    Console.WriteLine("Press any key to stop playback and go back to the Main Menu Screen");
+                    Console.ReadKey();
+
+                    outputDevice.Stop();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
+
+
+    // Main Menu Page
+    public class MainMenuPage
+    {
+        private Controller _controller;
+
+        public MainMenuPage(Controller controller)
+
+        {
+            _controller = controller;
+        }
+
+        public async Task ShowAsync()
+        {
+            bool exit = false;
+            while (!exit)
+            {
+                Console.Clear();
+                Console.WriteLine("\x1b[3J"); //Clear Entire Console
+                Console.WriteLine("Main Menu");
+                Console.WriteLine("\n");
+                Console.WriteLine("1. Search a Track");
+                Console.WriteLine("2. Search an Artist");
+                Console.WriteLine("3. Search an Album");
+                Console.WriteLine("4. Search a Genre");
+                Console.WriteLine("5. Quit");
+                Console.WriteLine("\n");
+                Console.Write("Choose an Option: ");
+
+                var option = Console.ReadLine();
+
+                switch (option)
+                {
+                    case "1":
+                        var searchTrackScreen = new SearchTrackScreen(_controller);
+                        await searchTrackScreen.ShowAsync();
+                        break;
+                    case "2":
+                        var searchArtistScreen = new SearchArtistScreen(_controller);
+                        await searchArtistScreen.ShowAsync();
+                        break;
+                    case "3":
+                        var searchAlbumScreen = new SearchAlbumScreen(_controller);
+                        await searchAlbumScreen.ShowAsync();
+                        break;
+                    case "4":
+                        var searchGenrePlaylistScreen = new SearchGenrePlaylistScreen(_controller);
+                        await searchGenrePlaylistScreen.ShowAsync();
+                        break;
+                    case "5":
+                        exit = true;
+                        break;
+                    default:
+                        Console.WriteLine("Wrong Option, please try again.");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+        }
+    }
+}
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using CMDSpotifyClient.InterfaceAdapters;
+using CMDSpotifyClient.InterfaceAdapters.Interfaces;
+using CMDSpotifyClient.UseCases;
+using CMDSpotifyClient.UseCases.Interfaces;
+using CMDSpotifyClient.Presentation;
+using CMDSpotifyClient.Infrastructure;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Http;
+using CMDSpotifyClientCleanArchitecture.Controller;
+using CMDSpotifyClient.Repository.Interfaces;
+using CMDSpotifyClient.Repository;
+
+//Rechtsklicken Sie auf Ihr Projekt im Solution Explorer, wählen Sie "Manage NuGet Packages...", und suchen Sie dann nach den oben genannten Paketen, um sie zu installieren.
+//package Microsoft.Extensions.Hosting
+//package Microsoft.Extensions.DependencyInjection
+//package Microsoft.Extensions.Http
+
+var builder = Host.CreateDefaultBuilder(args);
+
+builder.ConfigureServices((hostContext, services) =>
+{
+    // Registriere HTTP Client für die SpotifyAdapter
+    services.AddHttpClient<ISpotifySearchAdapter, SpotifyAdapter>();
+    services.AddHttpClient<ISpotifyDataRetrievalAdapter, SpotifyAdapter>();
+    // Registrierte Repository-Klassen
+    services.AddScoped<ISearchRepository, SearchRepository>();
+    services.AddScoped<IRetrievalRepository, RetrievalRepository>();
+
+    // Registrieren Sie HttpClient für SpotifyCredentials
+    services.AddHttpClient<SpotifyCredentials>().ConfigureHttpClient(client =>
+    {
+        // Konfig?
+    });
+
+    // SpotifyCredentials als Singleton 
+    services.AddSingleton(provider =>
+    {
+        var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+        var httpClient = httpClientFactory.CreateClient();
+        var clientId = "65030c7ddddc4cbe822c46c4277fe265";
+        var clientSecret = "f8500ebc8b434ec98ebb0f525a02a55c";
+        return new SpotifyCredentials(httpClient, clientId, clientSecret);
+    });
+
+    // Registrierte Search Use Cases
+    services.AddTransient<ISearchTrackUseCase, SearchTrackUseCase>();
+    services.AddTransient<ISearchArtistUseCase, SearchArtistUseCase>();
+    services.AddTransient<ISearchAlbumUseCase, SearchAlbumUseCase>();
+    services.AddTransient<ISearchGenrePlaylistUseCase, SearchGenrePlaylistUseCase>();
+    // Registrierte Get Use Cases
+    services.AddTransient<IGetTrackUseCase, GetTrackUseCase>();
+    services.AddTransient<IGetArtistUseCase, GetArtistUseCase>();
+    services.AddTransient<IGetAlbumUseCase, GetAlbumUseCase>();
+    services.AddTransient<IGetGenrePlaylistUseCase, GetGenrePlaylistUseCase>();
+    services.AddTransient<Controller>();
+
+    // Registrierte Menu Präsentationsschicht
+    services.AddTransient<MainMenuPage>();
+    // Registrierte Search Präsentationsschichten
+    services.AddTransient<SearchTrackScreen>();
+    services.AddTransient<SearchArtistScreen>();
+    services.AddTransient<SearchAlbumScreen>();
+    services.AddTransient<SearchGenrePlaylistScreen>();
+    // Registrierte Get Präsentationsschichten
+    services.AddTransient<GetTrackScreen>();
+    services.AddTransient<GetArtistScreen>();
+    services.AddTransient<GetAlbumScreen>();
+    services.AddTransient<GetGenrePlaylistScreen>();
+    // Registrierte Play Präsentationsschichten
+    services.AddTransient<PlayTrackScreen>();
+
+    //Delete CMD MEssages
+    services.RemoveAll<IHttpMessageHandlerBuilderFilter>();
+});
+
+var app = builder.Build();
+
+// Hier beginnt die Ausführung deiner Anwendung
+await RunApplicationAsync(app.Services);
+
+async Task RunApplicationAsync(IServiceProvider services)
+{
+    using var scope = services.CreateScope();
+    var serviceProvider = scope.ServiceProvider;
+
+    try
+    {
+        var mainMenuPage = serviceProvider.GetRequiredService<MainMenuPage>();
+        await mainMenuPage.ShowAsync();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Ein unerwarteter Fehler ist aufgetreten: {ex.Message}");
+    }
+}
+
+await app.RunAsync();
+using CMDSpotifyClient.InterfaceAdapters.Interfaces;
+using CMDSpotifyClient.Responses;
+using CMDSpotifyClient.Entities;
+using CMDSpotifyClient.Repository.Interfaces;
+using Newtonsoft.Json;
+
+namespace CMDSpotifyClient.Repository
+{
+    public class SearchRepository : ISearchRepository
+    {
+        private readonly ISpotifySearchAdapter _spotifySearchAdapter;
+
+        public SearchRepository(ISpotifySearchAdapter spotifySearchAdapter)
+        {
+            _spotifySearchAdapter = spotifySearchAdapter;
+        }
+        public async Task<List<Track>> SearchTracksAsync(string trackName)
+        {
+            var jsonResult = await _spotifySearchAdapter.SearchTrackAsync(trackName);
+            var response = JsonConvert.DeserializeObject<JSONResponses.SearchForItem.Rootobject>(jsonResult);
+            var tracks = new List<Track>();
+            foreach (var trackItem in response.tracks.items)
+            {
+                var track = new Track
+                {
+                    Id = trackItem.id,
+                    Name = trackItem.name,
+                    Artists = trackItem.artists.Select(artist => new Artist
+                    {
+                        Id = artist.id,
+                        Name = artist.name
+                    }).ToList(),
+                };
+
+                tracks.Add(track);
+            }
+
+            return tracks;
+        }
+        public async Task<List<Artist>> SearchArtistsAsync(string artistName)
+        {
+            var jsonResult = await _spotifySearchAdapter.SearchArtistAsync(artistName);
+            var response = JsonConvert.DeserializeObject<JSONResponses.SearchForItem.Rootobject>(jsonResult);
+            var Artists = new List<Artist>();
+            foreach (var artistItem in response.artists.items)
+            {
+                var artist = new Artist
+                {
+                    Id = artistItem.id,
+                    Name = artistItem.name,
+                };
+
+                Artists.Add(artist);
+            }
+
+            return Artists;
+        }
+        public async Task<List<Album>> SearchAlbumsAsync(string albumName)
+        {
+            var jsonResult = await _spotifySearchAdapter.SearchAlbumAsync(albumName);
+            var response = JsonConvert.DeserializeObject<JSONResponses.SearchForItem.Rootobject>(jsonResult);
+            var Albums = new List<Album>();
+            foreach (var albumItem in response.albums.items)
+            {
+                var album = new Album
+                {
+                    Id = albumItem.id,
+                    Name = albumItem.name,
+                    Artists = albumItem.artists.Select(artist => new Artist
+                    {
+                        Id = artist.id,
+                        Name = artist.name
+                    }).ToList(),
+                };
+
+                Albums.Add(album);
+            }
+
+            return Albums;
+        }
+        public async Task<List<Playlist>> SearchGenrePlaylistsAsync(string genreName)
+        {
+            var jsonResult = await _spotifySearchAdapter.SearchGenrePlaylistAsync(genreName);
+            var response = JsonConvert.DeserializeObject<JSONResponses.SearchForItem.Rootobject>(jsonResult);
+            var Playlists = new List<Playlist>();
+            foreach (var playlistItem in response.playlists.items)
+            {
+                var playlist = new Playlist
+                {
+                    Id = playlistItem.id,
+                    Name = playlistItem.name,
+                };
+
+                Playlists.Add(playlist);
+            }
+
+            return Playlists;
+        }
+    }
+
+    public class RetrievalRepository : IRetrievalRepository
+    {
+        private readonly ISpotifyDataRetrievalAdapter _spotifyDataRetrievalAdapter;
+
+        public RetrievalRepository(ISpotifyDataRetrievalAdapter spotifyDataRetrievalAdapter)
+        {
+            _spotifyDataRetrievalAdapter = spotifyDataRetrievalAdapter;
+        }
+        private string ConvertMsToMinSec(int ms)
+        {
+            int totalSeconds = ms / 1000;
+            int minutes = totalSeconds / 60;
+            int seconds = totalSeconds % 60;
+            return $"{minutes}:{seconds:D2}";
+        }
+        public async Task<List<Track>> GetTrackAsync(string trackId)
+        {
+            var jsonResult = await _spotifyDataRetrievalAdapter.GetTrackAsync(trackId);
+            var response = JsonConvert.DeserializeObject<JSONResponses.GetTrack.Rootobject>(jsonResult);
+            var tracks = new List<Track>();
+
+            var track = new Track
+            {
+                Id = response.id,
+                Name = response.name,
+                DurationMin = ConvertMsToMinSec(response.duration_ms),
+                Artists = response.artists.Select(artist => new Artist
+                {
+                    Id = artist.id,
+                    Name = artist.name
+                }).ToList(),
+                Popularity = response.popularity,
+                Explicit = response._explicit,
+                Album = new Album
+                {
+                    Id = response.album.id,
+                    Name = response.album.name,
+                    TotalTracks = response.album.total_tracks,
+                    ReleaseDate = response.album.release_date,
+                },
+                TrackNumber = response.track_number,
+                PreviewUrl = response.preview_url,
+                Type = response.type,
+            };
+
+            tracks.Add(track);
+
+            return tracks;
+        }
+        public async Task<List<Artist>> GetArtistAsync(string artistId)
+        {
+            var jsonResult = await _spotifyDataRetrievalAdapter.GetArtistAsync(artistId);
+            var response = JsonConvert.DeserializeObject<JSONResponses.GetArtists.Rootobject>(jsonResult);
+            var artists = new List<Artist>();
+
+            foreach (var artist in response.artists)
+            {
+                var artist1 = new Artist
+                {
+                    Id = artist.id,
+                    Name = artist.name,
+                    Followers = artist.followers.total,
+                    Popularity = artist.popularity,
+                    Genre = artist.genres.ToList(),
+                };
+
+                artists.Add(artist1);
+            }
+
+            return artists;
+        }
+        public async Task<List<Album>> GetAlbumAsync(string albumId)
+        {
+            var jsonResult = await _spotifyDataRetrievalAdapter.GetAlbumAsync(albumId);
+            var response = JsonConvert.DeserializeObject<JSONResponses.GetAlbum.Rootobject>(jsonResult);
+            var albums = new List<Album>();
+
+            var album = new Album
+            {
+                Id = response.id,
+                Name = response.name,
+                TotalTracks = response.total_tracks,
+                Popularity = response.popularity,
+                ReleaseDate = response.release_date,
+                Label = response.label,
+                Artists = response.artists.Select(artist => new Artist
+                {
+                    Id = artist.id,
+                    Name = artist.name
+                }).ToList(),
+                Tracks = response.tracks.items.Select(tracks => new Track
+                {
+                    Id = tracks.id,
+                    Name = tracks.name
+                }).ToList(),
+
+            };
+
+            albums.Add(album);
+
+            return albums;
+        }
+        public async Task<List<Playlist>> GetGenrePlaylistAsync(string playlistId)
+        {
+            var jsonResult = await _spotifyDataRetrievalAdapter.GetGenrePlaylistAsync(playlistId);
+            var response = JsonConvert.DeserializeObject<JSONResponses.GetPlaylist.Rootobject>(jsonResult);
+            var playlists = new List<Playlist>();
+
+            var playlist = new Playlist
+            {
+                Id = response.id,
+                Name = response.name,
+                Description = response.description,
+                Followers = response.followers.total,
+                Tracks = response.tracks.items.Select(tracks => new Track
+                {
+                    Id = tracks.track.id,
+                    Name = tracks.track.name
+                }).ToList(),
+
+            };
+
+            playlists.Add(playlist);
+
+            return playlists;
+        }
+    }
+}
+using CMDSpotifyClient.Entities;
+using CMDSpotifyClient.InterfaceAdapters.Interfaces;
+using CMDSpotifyClient.UseCases.Interfaces;
+using CMDSpotifyClient.Responses;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
+using CMDSpotifyClient.Repository.Interfaces;
+
+namespace CMDSpotifyClient.UseCases
+{
+    //Search Use Cases
+    public class SearchTrackUseCase : ISearchTrackUseCase
+    {
+        private readonly ISearchRepository _searchTrackRepository;
+        public SearchTrackUseCase(ISearchRepository searchTrackRepository)
+        {
+            _searchTrackRepository = searchTrackRepository;
+        }
+        public async Task<List<Track>> ExecuteAsync(string trackName)
+        {
+            return await _searchTrackRepository.SearchTracksAsync(trackName);
+        }
+    }
+    public class SearchArtistUseCase : ISearchArtistUseCase
+    {
+        private readonly ISearchRepository _searchArtistRepository;
+        public SearchArtistUseCase(ISearchRepository searchArtistRepository)
+        {
+            _searchArtistRepository = searchArtistRepository;
+        }
+        public async Task<List<Artist>> ExecuteAsync(string artistName)
+        {
+            return await _searchArtistRepository.SearchArtistsAsync(artistName);
+        }
+    }
+    public class SearchAlbumUseCase : ISearchAlbumUseCase
+    {
+        private readonly ISearchRepository _searchAlbumRepository;
+        public SearchAlbumUseCase(ISearchRepository searchAlbumRepository)
+        {
+            _searchAlbumRepository = searchAlbumRepository;
+        }
+        public async Task<List<Album>> ExecuteAsync(string albumName)
+        {
+            return await _searchAlbumRepository.SearchAlbumsAsync(albumName);
+        }
+    }
+    public class SearchGenrePlaylistUseCase : ISearchGenrePlaylistUseCase
+    {
+        private readonly ISearchRepository _searchGenrePlalyistRepository;
+        public SearchGenrePlaylistUseCase(ISearchRepository searchGenrePlaylistRepository)
+        {
+            _searchGenrePlalyistRepository = searchGenrePlaylistRepository;
+        }
+        public async Task<List<Playlist>> ExecuteAsync(string genreName)
+        {
+            return await _searchGenrePlalyistRepository.SearchGenrePlaylistsAsync(genreName);
+        }
+    }
+    // Get Use Cases
+    public class GetTrackUseCase : IGetTrackUseCase
+    {
+        private readonly IRetrievalRepository _getTrackUseCase;
+        public GetTrackUseCase(IRetrievalRepository getTrackUseCase)
+        {
+            _getTrackUseCase = getTrackUseCase;
+        }
+        public async Task<List<Track>> ExecuteAsync(string trackId)
+        {
+            return await _getTrackUseCase.GetTrackAsync(trackId);
+        }
+    }
+    public class GetArtistUseCase : IGetArtistUseCase
+    {
+        private readonly IRetrievalRepository _getArtistUseCase;
+        public GetArtistUseCase(IRetrievalRepository getArtistUseCase)
+        {
+            _getArtistUseCase = getArtistUseCase;
+        }
+        public async Task<List<Artist>> ExecuteAsync(string artistId)
+        {
+            return await _getArtistUseCase.GetArtistAsync(artistId);
+        }
+    }
+    public class GetAlbumUseCase : IGetAlbumUseCase
+    {
+        private readonly IRetrievalRepository _getAlbumUseCase;
+        public GetAlbumUseCase(IRetrievalRepository getAlbumUseCase)
+        {
+            _getAlbumUseCase = getAlbumUseCase;
+        }
+        public async Task<List<Album>> ExecuteAsync(string albumId)
+        {
+            return await _getAlbumUseCase.GetAlbumAsync(albumId);
+        }
+    }
+
+    public class GetGenrePlaylistUseCase : IGetGenrePlaylistUseCase
+    {
+        private readonly IRetrievalRepository _getGenrePlaylistUseCase;
+        public GetGenrePlaylistUseCase(IRetrievalRepository getGenrePlaylistUseCase)
+        {
+            _getGenrePlaylistUseCase = getGenrePlaylistUseCase;
+        }
+        public async Task<List<Playlist>> ExecuteAsync(string playlistId)
+        {
+            return await _getGenrePlaylistUseCase.GetGenrePlaylistAsync(playlistId);
+        }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CMDSpotifyClient.Responses
+{
+    public class JSONResponses
+    {
+        //Search JSON Responses
+        public class SearchForItem
+        {
+            public class Rootobject
+            {
+                public Tracks tracks { get; set; }
+                public Artists artists { get; set; }
+                public Albums albums { get; set; }
+                public Playlists playlists { get; set; }
+                public Shows shows { get; set; }
+                public Episodes episodes { get; set; }
+                public Audiobooks audiobooks { get; set; }
+            }
+
+            public class Tracks
+            {
+                public string href { get; set; }
+                public int limit { get; set; }
+                public string next { get; set; }
+                public int offset { get; set; }
+                public string previous { get; set; }
+                public int total { get; set; }
+                public Item[] items { get; set; }
+            }
+
+            public class Item
+            {
+                public Album album { get; set; }
+                public Artist1[] artists { get; set; }
+                public string[] available_markets { get; set; }
+                public int disc_number { get; set; }
+                public int duration_ms { get; set; }
+                public bool _explicit { get; set; }
+                public External_Ids external_ids { get; set; }
+                public External_Urls2 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public bool is_playable { get; set; }
+                public Linked_From linked_from { get; set; }
+                public Restrictions1 restrictions { get; set; }
+                public string name { get; set; }
+                public int popularity { get; set; }
+                public string preview_url { get; set; }
+                public int track_number { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+                public bool is_local { get; set; }
+            }
+
+            public class Album
+            {
+                public string album_type { get; set; }
+                public int total_tracks { get; set; }
+                public string[] available_markets { get; set; }
+                public External_Urls external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public Image[] images { get; set; }
+                public string name { get; set; }
+                public string release_date { get; set; }
+                public string release_date_precision { get; set; }
+                public Restrictions restrictions { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+                public Artist[] artists { get; set; }
+            }
+
+            public class External_Urls
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Restrictions
+            {
+                public string reason { get; set; }
+            }
+
+            public class Image
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+            public class Artist
+            {
+                public External_Urls1 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public string name { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls1
+            {
+                public string spotify { get; set; }
+            }
+
+            public class External_Ids
+            {
+                public string isrc { get; set; }
+                public string ean { get; set; }
+                public string upc { get; set; }
+            }
+
+            public class External_Urls2
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Linked_From
+            {
+            }
+
+            public class Restrictions1
+            {
+                public string reason { get; set; }
+            }
+
+            public class Artist1
+            {
+                public External_Urls3 external_urls { get; set; }
+                public Followers followers { get; set; }
+                public string[] genres { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public Image1[] images { get; set; }
+                public string name { get; set; }
+                public int popularity { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls3
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Followers
+            {
+                public string href { get; set; }
+                public int total { get; set; }
+            }
+
+            public class Image1
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+            public class Artists
+            {
+                public string href { get; set; }
+                public int limit { get; set; }
+                public string next { get; set; }
+                public int offset { get; set; }
+                public string previous { get; set; }
+                public int total { get; set; }
+                public Item1[] items { get; set; }
+            }
+
+            public class Item1
+            {
+                public External_Urls4 external_urls { get; set; }
+                public Followers1 followers { get; set; }
+                public string[] genres { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public Image2[] images { get; set; }
+                public string name { get; set; }
+                public int popularity { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls4
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Followers1
+            {
+                public string href { get; set; }
+                public int total { get; set; }
+            }
+
+            public class Image2
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+            public class Albums
+            {
+                public string href { get; set; }
+                public int limit { get; set; }
+                public string next { get; set; }
+                public int offset { get; set; }
+                public string previous { get; set; }
+                public int total { get; set; }
+                public Item2[] items { get; set; }
+            }
+
+            public class Item2
+            {
+                public string album_type { get; set; }
+                public int total_tracks { get; set; }
+                public string[] available_markets { get; set; }
+                public External_Urls5 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public Image3[] images { get; set; }
+                public string name { get; set; }
+                public string release_date { get; set; }
+                public string release_date_precision { get; set; }
+                public Restrictions2 restrictions { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+                public Artist2[] artists { get; set; }
+            }
+
+            public class External_Urls5
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Restrictions2
+            {
+                public string reason { get; set; }
+            }
+
+            public class Image3
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+            public class Artist2
+            {
+                public External_Urls6 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public string name { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls6
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Playlists
+            {
+                public string href { get; set; }
+                public int limit { get; set; }
+                public string next { get; set; }
+                public int offset { get; set; }
+                public string previous { get; set; }
+                public int total { get; set; }
+                public Item3[] items { get; set; }
+            }
+
+            public class Item3
+            {
+                public bool collaborative { get; set; }
+                public string description { get; set; }
+                public External_Urls7 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public string name { get; set; }
+                public Owner owner { get; set; }
+                public bool _public { get; set; }
+                public string snapshot_id { get; set; }
+                public Tracks1 tracks { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls7
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Owner
+            {
+                public External_Urls8 external_urls { get; set; }
+                public Followers2 followers { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+                public string display_name { get; set; }
+            }
+
+            public class External_Urls8
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Followers2
+            {
+                public string href { get; set; }
+                public int total { get; set; }
+            }
+
+            public class Tracks1
+            {
+                public string href { get; set; }
+                public int total { get; set; }
+            }
+
+            public class Image4
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+            public class Shows
+            {
+                public string href { get; set; }
+                public int limit { get; set; }
+                public string next { get; set; }
+                public int offset { get; set; }
+                public string previous { get; set; }
+                public int total { get; set; }
+                public Item4[] items { get; set; }
+            }
+
+            public class Item4
+            {
+                public string[] available_markets { get; set; }
+                public Copyright[] copyrights { get; set; }
+                public string description { get; set; }
+                public string html_description { get; set; }
+                public bool _explicit { get; set; }
+                public External_Urls9 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public Image5[] images { get; set; }
+                public bool is_externally_hosted { get; set; }
+                public string[] languages { get; set; }
+                public string media_type { get; set; }
+                public string name { get; set; }
+                public string publisher { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+                public int total_episodes { get; set; }
+            }
+
+            public class External_Urls9
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Copyright
+            {
+                public string text { get; set; }
+                public string type { get; set; }
+            }
+
+            public class Image5
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+            public class Episodes
+            {
+                public string href { get; set; }
+                public int limit { get; set; }
+                public string next { get; set; }
+                public int offset { get; set; }
+                public string previous { get; set; }
+                public int total { get; set; }
+                public Item5[] items { get; set; }
+            }
+
+            public class Item5
+            {
+                public string audio_preview_url { get; set; }
+                public string description { get; set; }
+                public string html_description { get; set; }
+                public int duration_ms { get; set; }
+                public bool _explicit { get; set; }
+                public External_Urls10 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public Image6[] images { get; set; }
+                public bool is_externally_hosted { get; set; }
+                public bool is_playable { get; set; }
+                public string language { get; set; }
+                public string[] languages { get; set; }
+                public string name { get; set; }
+                public string release_date { get; set; }
+                public string release_date_precision { get; set; }
+                public Resume_Point resume_point { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+                public Restrictions3 restrictions { get; set; }
+            }
+
+            public class External_Urls10
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Resume_Point
+            {
+                public bool fully_played { get; set; }
+                public int resume_position_ms { get; set; }
+            }
+
+            public class Restrictions3
+            {
+                public string reason { get; set; }
+            }
+
+            public class Image6
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+            public class Audiobooks
+            {
+                public string href { get; set; }
+                public int limit { get; set; }
+                public string next { get; set; }
+                public int offset { get; set; }
+                public string previous { get; set; }
+                public int total { get; set; }
+                public Item6[] items { get; set; }
+            }
+
+            public class Item6
+            {
+                public Author[] authors { get; set; }
+                public string[] available_markets { get; set; }
+                public Copyright1[] copyrights { get; set; }
+                public string description { get; set; }
+                public string html_description { get; set; }
+                public string edition { get; set; }
+                public bool _explicit { get; set; }
+                public External_Urls11 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public Image7[] images { get; set; }
+                public string[] languages { get; set; }
+                public string media_type { get; set; }
+                public string name { get; set; }
+                public Narrator[] narrators { get; set; }
+                public string publisher { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+                public int total_chapters { get; set; }
+            }
+
+            public class External_Urls11
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Author
+            {
+                public string name { get; set; }
+            }
+
+            public class Copyright1
+            {
+                public string text { get; set; }
+                public string type { get; set; }
+            }
+
+            public class Image7
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+            public class Narrator
+            {
+                public string name { get; set; }
+            }
+
+        }
+
+        //Get JSON Responses
+        public class GetTrack
+        {
+            public class Rootobject
+            {
+                public Album album { get; set; }
+                public Artist1[] artists { get; set; }
+                public string[] available_markets { get; set; }
+                public int disc_number { get; set; }
+                public int duration_ms { get; set; }
+                public bool _explicit { get; set; }
+                public External_Ids external_ids { get; set; }
+                public External_Urls2 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public bool is_playable { get; set; }
+                public Linked_From linked_from { get; set; }
+                public Restrictions1 restrictions { get; set; }
+                public string name { get; set; }
+                public int popularity { get; set; }
+                public string preview_url { get; set; }
+                public int track_number { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+                public bool is_local { get; set; }
+            }
+
+            public class Album
+            {
+                public string album_type { get; set; }
+                public int total_tracks { get; set; }
+                public string[] available_markets { get; set; }
+                public External_Urls external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public Image[] images { get; set; }
+                public string name { get; set; }
+                public string release_date { get; set; }
+                public string release_date_precision { get; set; }
+                public Restrictions restrictions { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+                public Artist[] artists { get; set; }
+            }
+
+            public class External_Urls
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Restrictions
+            {
+                public string reason { get; set; }
+            }
+
+            public class Image
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+            public class Artist
+            {
+                public External_Urls1 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public string name { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls1
+            {
+                public string spotify { get; set; }
+            }
+
+            public class External_Ids
+            {
+                public string isrc { get; set; }
+                public string ean { get; set; }
+                public string upc { get; set; }
+            }
+
+            public class External_Urls2
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Linked_From
+            {
+            }
+
+            public class Restrictions1
+            {
+                public string reason { get; set; }
+            }
+
+            public class Artist1
+            {
+                public External_Urls3 external_urls { get; set; }
+                public Followers followers { get; set; }
+                public string[] genres { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public Image1[] images { get; set; }
+                public string name { get; set; }
+                public int popularity { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls3
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Followers
+            {
+                public string href { get; set; }
+                public int total { get; set; }
+            }
+
+            public class Image1
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+        }
+
+        public class GetArtists
+        {
+
+            public class Rootobject
+            {
+                public Artist[] artists { get; set; }
+            }
+
+            public class Artist
+            {
+                public External_Urls external_urls { get; set; }
+                public Followers followers { get; set; }
+                public string[] genres { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public Image[] images { get; set; }
+                public string name { get; set; }
+                public int popularity { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Followers
+            {
+                public string href { get; set; }
+                public int total { get; set; }
+            }
+
+            public class Image
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+        }
+
+        public class GetAlbum
+        {
+
+            public class Rootobject
+            {
+                public string album_type { get; set; }
+                public int total_tracks { get; set; }
+                public string[] available_markets { get; set; }
+                public External_Urls external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public Image[] images { get; set; }
+                public string name { get; set; }
+                public string release_date { get; set; }
+                public string release_date_precision { get; set; }
+                public Restrictions restrictions { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+                public Artist1[] artists { get; set; }
+                public Tracks tracks { get; set; }
+                public Copyright[] copyrights { get; set; }
+                public External_Ids external_ids { get; set; }
+                public string[] genres { get; set; }
+                public string label { get; set; }
+                public int popularity { get; set; }
+            }
+
+            public class External_Urls
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Restrictions
+            {
+                public string reason { get; set; }
+            }
+
+            public class Tracks
+            {
+                public string href { get; set; }
+                public int limit { get; set; }
+                public string next { get; set; }
+                public int offset { get; set; }
+                public string previous { get; set; }
+                public int total { get; set; }
+                public Item[] items { get; set; }
+            }
+
+            public class Item
+            {
+                public Artist[] artists { get; set; }
+                public string[] available_markets { get; set; }
+                public int disc_number { get; set; }
+                public int duration_ms { get; set; }
+                public bool _explicit { get; set; }
+                public External_Urls1 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public bool is_playable { get; set; }
+                public Linked_From linked_from { get; set; }
+                public Restrictions1 restrictions { get; set; }
+                public string name { get; set; }
+                public string preview_url { get; set; }
+                public int track_number { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+                public bool is_local { get; set; }
+            }
+
+            public class External_Urls1
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Linked_From
+            {
+                public External_Urls2 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls2
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Restrictions1
+            {
+                public string reason { get; set; }
+            }
+
+            public class Artist
+            {
+                public External_Urls3 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public string name { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls3
+            {
+                public string spotify { get; set; }
+            }
+
+            public class External_Ids
+            {
+                public string isrc { get; set; }
+                public string ean { get; set; }
+                public string upc { get; set; }
+            }
+
+            public class Image
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+            public class Artist1
+            {
+                public External_Urls4 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public string name { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls4
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Copyright
+            {
+                public string text { get; set; }
+                public string type { get; set; }
+            }
+
+        }
+
+        public class GetPlaylist
+        {
+            public class Rootobject
+            {
+                public bool collaborative { get; set; }
+                public string description { get; set; }
+                public External_Urls external_urls { get; set; }
+                public Followers followers { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public string name { get; set; }
+                public Owner owner { get; set; }
+                public bool _public { get; set; }
+                public string snapshot_id { get; set; }
+                public Tracks tracks { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Followers
+            {
+                public string href { get; set; }
+                public int total { get; set; }
+            }
+
+            public class Owner
+            {
+                public External_Urls1 external_urls { get; set; }
+                public Followers1 followers { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+                public string display_name { get; set; }
+            }
+
+            public class External_Urls1
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Followers1
+            {
+                public string href { get; set; }
+                public int total { get; set; }
+            }
+
+            public class Tracks
+            {
+                public string href { get; set; }
+                public int limit { get; set; }
+                public string next { get; set; }
+                public int offset { get; set; }
+                public string previous { get; set; }
+                public int total { get; set; }
+                public Item[] items { get; set; }
+            }
+
+            public class Item
+            {
+                public string added_at { get; set; }
+                public Added_By added_by { get; set; }
+                public bool is_local { get; set; }
+                public Track track { get; set; }
+            }
+
+            public class Added_By
+            {
+                public External_Urls2 external_urls { get; set; }
+                public Followers2 followers { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls2
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Followers2
+            {
+                public string href { get; set; }
+                public int total { get; set; }
+            }
+
+            public class Track
+            {
+                public Album album { get; set; }
+                public Artist1[] artists { get; set; }
+                public string[] available_markets { get; set; }
+                public int disc_number { get; set; }
+                public int duration_ms { get; set; }
+                public bool _explicit { get; set; }
+                public External_Ids external_ids { get; set; }
+                public External_Urls5 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public bool is_playable { get; set; }
+                public Linked_From linked_from { get; set; }
+                public Restrictions1 restrictions { get; set; }
+                public string name { get; set; }
+                public int popularity { get; set; }
+                public string preview_url { get; set; }
+                public int track_number { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+                public bool is_local { get; set; }
+            }
+
+            public class Album
+            {
+                public string album_type { get; set; }
+                public int total_tracks { get; set; }
+                public string[] available_markets { get; set; }
+                public External_Urls3 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public Image[] images { get; set; }
+                public string name { get; set; }
+                public string release_date { get; set; }
+                public string release_date_precision { get; set; }
+                public Restrictions restrictions { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+                public Artist[] artists { get; set; }
+            }
+
+            public class External_Urls3
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Restrictions
+            {
+                public string reason { get; set; }
+            }
+
+            public class Image
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+            public class Artist
+            {
+                public External_Urls4 external_urls { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public string name { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls4
+            {
+                public string spotify { get; set; }
+            }
+
+            public class External_Ids
+            {
+                public string isrc { get; set; }
+                public string ean { get; set; }
+                public string upc { get; set; }
+            }
+
+            public class External_Urls5
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Linked_From
+            {
+            }
+
+            public class Restrictions1
+            {
+                public string reason { get; set; }
+            }
+
+            public class Artist1
+            {
+                public External_Urls6 external_urls { get; set; }
+                public Followers3 followers { get; set; }
+                public string[] genres { get; set; }
+                public string href { get; set; }
+                public string id { get; set; }
+                public Image1[] images { get; set; }
+                public string name { get; set; }
+                public int popularity { get; set; }
+                public string type { get; set; }
+                public string uri { get; set; }
+            }
+
+            public class External_Urls6
+            {
+                public string spotify { get; set; }
+            }
+
+            public class Followers3
+            {
+                public string href { get; set; }
+                public int total { get; set; }
+            }
+
+            public class Image1
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+            public class Image2
+            {
+                public string url { get; set; }
+                public int height { get; set; }
+                public int width { get; set; }
+            }
+
+        }
+    }
+}
