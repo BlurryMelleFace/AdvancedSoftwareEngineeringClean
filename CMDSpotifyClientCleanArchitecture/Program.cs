@@ -65,9 +65,11 @@ builder.ConfigureServices((hostContext, services) =>
     services.AddTransient<SearchGenrePlaylistScreen>();
     // Registrierte Get Präsentationsschichten
     services.AddTransient<GetTrackScreen>();
-    //services.AddTransient<GetArtistScreen>();
-    //services.AddTransient<GetAlbumScreen>();
-    //services.AddTransient<GetGenrePlaylistScreen>();
+    services.AddTransient<GetArtistScreen>();
+    services.AddTransient<GetAlbumScreen>();
+    services.AddTransient<GetGenrePlaylistScreen>();
+    // Registrierte Play Präsentationsschichten
+    services.AddTransient<PlayTrackScreen>();
 
     //Delete CMD MEssages
     services.RemoveAll<IHttpMessageHandlerBuilderFilter>();
