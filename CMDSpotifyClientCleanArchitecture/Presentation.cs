@@ -129,10 +129,12 @@ namespace CMDSpotifyClient.Presentation
     public class SearchAlbumScreen
     {
         private readonly Controller _controller;
+        private List<string> _listOfAlbumIds;
 
         public SearchAlbumScreen(Controller controller)
         {
             _controller = controller;
+            _listOfAlbumIds = new List<string>();   
         }
         public async Task ShowAsync()
         {
@@ -142,12 +144,39 @@ namespace CMDSpotifyClient.Presentation
 
             try
             {
+                Console.Clear();
+                Console.WriteLine("Suggestion based on your search query");
+                Console.WriteLine("\n");
                 var albums = await _controller.SearchAlbum(albumName);
                 foreach (var album in albums)
                 {
-                    Console.WriteLine($"Gefunden: {album.Name} -  {string.Join(", ", album.Artists.Select(a => a.Name))}");
+                    Console.WriteLine($"Found Album: {album.Name} -  {string.Join(", ", album.Artists.Select(a => a.Name))}");
                     Console.WriteLine($"SpotifyID: {album.Id}");
                     Console.WriteLine("\n");
+                    _listOfAlbumIds.Add(album.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+            Console.WriteLine("\n");
+            Console.WriteLine("1. Show me the Album");
+            Console.WriteLine("2. <--");
+            Console.WriteLine("\n");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
+                        var GetAlbumScreen = new GetAlbumScreen(_controller, _listOfAlbumIds);
+                        await GetAlbumScreen.ShowAsync();
+                        break;
+                    case "2":
+                        break;
                 }
             }
             catch (Exception ex)
@@ -156,17 +185,17 @@ namespace CMDSpotifyClient.Presentation
                 Console.WriteLine($"There has been an Error: {ex.Message}");
             }
 
-            Console.WriteLine("Press any button to continue...");
-            Console.ReadKey();
         }
     }
     public class SearchGenrePlaylistScreen
     {
         private readonly Controller _controller;
+        private List<string> _listOfPlaylistIds;
 
         public SearchGenrePlaylistScreen(Controller controller)
         {
             _controller = controller;
+            _listOfPlaylistIds = new List<string>();
         }
         public async Task ShowAsync()
         {
@@ -176,12 +205,39 @@ namespace CMDSpotifyClient.Presentation
 
             try
             {
+                Console.Clear();
+                Console.WriteLine("Suggestion based on your search query");
+                Console.WriteLine("\n");
                 var playlists = await _controller.SearchGenrePlayist(genreName);
                 foreach (var playlist in playlists)
                 {
                     Console.WriteLine($"Found: {playlist.Name}");
                     Console.WriteLine($"SpotifyID: {playlist.Id}");
                     Console.WriteLine("\n");
+                    _listOfPlaylistIds.Add(playlist.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+            Console.WriteLine("\n");
+            Console.WriteLine("1. Show me the Playlist");
+            Console.WriteLine("2. <--");
+            Console.WriteLine("\n");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
+                        var GetGenrePlaylistScreen = new GetGenrePlaylistScreen(_controller, _listOfPlaylistIds);
+                        await GetGenrePlaylistScreen.ShowAsync();
+                        break;
+                    case "2":
+                        break;
                 }
             }
             catch (Exception ex)
@@ -190,8 +246,6 @@ namespace CMDSpotifyClient.Presentation
                 Console.WriteLine($"There has been an Error: {ex.Message}");
             }
 
-            Console.WriteLine("Press any button to continue...");
-            Console.ReadKey();
         }
     }
     //Get Pages
@@ -314,8 +368,7 @@ namespace CMDSpotifyClient.Presentation
             }
 
             Console.WriteLine("\n");
-            Console.WriteLine("1. Preview Trac");
-            Console.WriteLine("2. <--");
+            Console.WriteLine("1. <--");
             Console.WriteLine("\n");
             var option = Console.ReadLine();
 
@@ -325,7 +378,135 @@ namespace CMDSpotifyClient.Presentation
                 {
                     case "1":
                         break;
-                    case "2":
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+        }
+    }
+    public class GetAlbumScreen
+    {
+        private Controller _controller;
+        private readonly List<string> _listOfAlbumIds;
+
+        public GetAlbumScreen(Controller controller, List<string> listOfAlbumIds)
+        {
+            _controller = controller;
+            _listOfAlbumIds = listOfAlbumIds;
+        }
+        public async Task ShowAsync()
+        {
+            Console.Clear();
+
+            try
+            {
+                foreach (var albumId in _listOfAlbumIds)
+                {
+                    var albums = await _controller.GetAlbum(albumId);
+                    foreach (var album in albums)
+                    {
+                        Console.WriteLine($"Name of The Album: {album.Name}");
+                        Console.WriteLine("\n");
+                        Console.WriteLine($"Album Release Date: {album.ReleaseDate}");
+                        Console.WriteLine($"Album Label: {album.Label}");
+                        Console.WriteLine($"Album Popularity: {album.Popularity}");
+                        int i = 1;
+                        foreach (var artist in album.Artists)
+                        {
+                            Console.WriteLine($"Artist Name / Id: {i}: {artist.Name} - {artist.Id}");
+                            i++;
+                        }
+                        Console.WriteLine("\n");
+                        int ii = 1;
+                        foreach (var tracks in album.Tracks)
+                        {
+                            Console.WriteLine($"Track Name / Id: {ii}: {tracks.Name} - {tracks.Id}");
+                            ii++;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+
+            Console.WriteLine("\n");
+            Console.WriteLine("1. <--");
+            Console.WriteLine("\n");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+        }
+    }
+    public class GetGenrePlaylistScreen
+    {
+        private Controller _controller;
+        private readonly List<string> _listOfPlaylistIds;
+
+        public GetGenrePlaylistScreen(Controller controller, List<string> listOfPlaylistIds)
+        {
+            _controller = controller;
+            _listOfPlaylistIds = listOfPlaylistIds;
+        }
+        public async Task ShowAsync()
+        {
+            Console.Clear();
+
+            try
+            {
+                foreach (var playlistId in _listOfPlaylistIds)
+                {
+                    var playlists = await _controller.GetGenrePlaylist(playlistId);
+                    foreach (var playlist in playlists)
+                    {
+                        Console.WriteLine($"Name of The Playlist: {playlist.Name}");
+                        Console.WriteLine($"SpotifyID: {playlist.Id}");
+                        Console.WriteLine("\n");
+                        Console.WriteLine($"Description of the Playlist: {playlist.Description}");
+                        Console.WriteLine($"Playlist Followers: {playlist.Followers}");
+                        Console.WriteLine("\n");
+                        int i = 0;
+                        foreach (var track in playlist.Tracks)
+                        {
+                            Console.WriteLine($"Track Name / Id: {i}: {track.Name} - {track.Id}");
+                            i++;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+
+            Console.WriteLine("\n");
+            Console.WriteLine("1. <--");
+            Console.WriteLine("\n");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
                         break;
                 }
             }
@@ -362,7 +543,7 @@ namespace CMDSpotifyClient.Presentation
                     outputDevice.Init(webStream);
                     outputDevice.Play();
 
-                    Console.WriteLine("Press any key to stop playback or go back to Track Search");
+                    Console.WriteLine("Press any key to stop playback and go back to the Main Menu Screen");
                     Console.ReadKey();
 
                     outputDevice.Stop();
@@ -394,6 +575,7 @@ namespace CMDSpotifyClient.Presentation
             while (!exit)
             {
                 Console.Clear();
+                Console.WriteLine("\x1b[3J"); //Clear Entire Console
                 Console.WriteLine("Main Menu");
                 Console.WriteLine("1. Search a Track");
                 Console.WriteLine("2. Search an Artist");

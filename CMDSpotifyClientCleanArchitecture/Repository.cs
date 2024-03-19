@@ -181,7 +181,21 @@ namespace CMDSpotifyClient.Repository
             {
                 Id = response.id,
                 Name = response.name,
-                TotalTracks = response.total_tracks
+                TotalTracks = response.total_tracks,
+                Popularity = response.popularity,
+                ReleaseDate = response.release_date,
+                Label = response.label,
+                Artists = response.artists.Select(artist => new Artist
+                {
+                    Id = artist.id,
+                    Name = artist.name
+                }).ToList(),
+                Tracks = response.tracks.items.Select(tracks => new Track
+                {
+                    Id = tracks.id,
+                    Name = tracks.name
+                }).ToList(),
+
             };
 
             albums.Add(album);
@@ -198,7 +212,13 @@ namespace CMDSpotifyClient.Repository
             {
                 Id = response.id,
                 Name = response.name,
-                Description = response.description
+                Description = response.description,
+                Followers = response.followers.total,
+                Tracks = response.tracks.items.Select(tracks => new Track
+                {
+                    Id = tracks.track.id,
+                    Name = tracks.track.name
+                }).ToList(),
 
             };
 
