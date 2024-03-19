@@ -140,7 +140,8 @@ namespace CMDSpotifyClient.Repository
                     ReleaseDate = response.album.release_date,
                 },
                 TrackNumber = response.track_number,
-
+                PreviewUrl = response.preview_url,
+                Type = response.type,
             };
 
             tracks.Add(track);
@@ -160,6 +161,8 @@ namespace CMDSpotifyClient.Repository
                     Id = artist.id,
                     Name = artist.name,
                     Followers = artist.followers.total,
+                    Popularity = artist.popularity,
+                    Genre = artist.genres.ToList(),
 
                 };
 

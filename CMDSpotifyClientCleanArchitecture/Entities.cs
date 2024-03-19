@@ -12,6 +12,8 @@
         public Album Album { get; set; }
         public int Popularity { get; set; } 
         public int TrackNumber { get; set; }
+        public string Type { get; set; }
+   
     }
 
     public class Artist
@@ -19,8 +21,8 @@
         public string Id { get; set; }
         public string Name { get; set; }
         public int Followers { get; set; }
-        public string Genre { get; set; }
-        public string Popularity { get; set; }
+        public List<string> Genre { get; set; }
+        public int Popularity { get; set; }
     }
 
     public class Album

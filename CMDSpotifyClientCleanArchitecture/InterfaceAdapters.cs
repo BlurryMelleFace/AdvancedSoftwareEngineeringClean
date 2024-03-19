@@ -52,7 +52,7 @@ namespace CMDSpotifyClient.InterfaceAdapters
             GetAuthorizedContentAsync($"{BaseSpotifyUrl}/albums/{albumId}");
 
         public Task<string> GetArtistAsync(string artistId) =>
-            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/artists/{artistId}");
+            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/artists?ids={artistId}");
 
         public Task<string> GetGenrePlaylistAsync(string playlistId) =>
             GetAuthorizedContentAsync($"{BaseSpotifyUrl}/playlists/{playlistId}");

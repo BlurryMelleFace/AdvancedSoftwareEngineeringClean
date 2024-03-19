@@ -50,3 +50,9 @@ C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanAr
 C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanArchitecture\obj\Debug\net6.0\CMDSpotifyClientCleanArchitecture.pdb
 C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanArchitecture\obj\Debug\net6.0\CMDSpotifyClientCleanArchitecture.genruntimeconfig.cache
 C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanArchitecture\obj\Debug\net6.0\ref\CMDSpotifyClientCleanArchitecture.dll
+C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanArchitecture\bin\Debug\net6.0\NAudio.dll
+C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanArchitecture\bin\Debug\net6.0\NAudio.Asio.dll
+C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanArchitecture\bin\Debug\net6.0\NAudio.Core.dll
+C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanArchitecture\bin\Debug\net6.0\NAudio.Midi.dll
+C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanArchitecture\bin\Debug\net6.0\NAudio.Wasapi.dll
+C:\Users\morit\Desktop\CMDSpotifyClientCleanArchitecture\CMDSpotifyClientCleanArchitecture\bin\Debug\net6.0\NAudio.WinMM.dll

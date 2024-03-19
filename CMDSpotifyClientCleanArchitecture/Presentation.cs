@@ -1,6 +1,7 @@
 ﻿using CMDSpotifyClient.UseCases.Interfaces;
 using CMDSpotifyClientCleanArchitecture.Controller;
 using System.Diagnostics;
+using NAudio.Wave;
 
 namespace CMDSpotifyClient.Presentation
 {
@@ -8,16 +9,17 @@ namespace CMDSpotifyClient.Presentation
     public class SearchTrackScreen
     {
         private Controller _controller;
+        private List<string> _listOfTrackIds;
         public SearchTrackScreen(Controller controller)
         {
             _controller = controller;
+            _listOfTrackIds = new List<string>();
         }
         public async Task ShowAsync()
         {
             Console.Clear();
             Console.WriteLine("Enter the name of the track you want to search for: ");
             var trackName = Console.ReadLine();
-            List<string> listOfTrackIds = new List<string>();
             try
             {
                 Console.Clear();
@@ -26,11 +28,11 @@ namespace CMDSpotifyClient.Presentation
                 var tracks = await _controller.SearchTrack(trackName);
                 foreach (var track in tracks)
                 {
-                    Console.WriteLine($"found: {track.Name} - {string.Join(", ", track.Artists.Select(a => a.Name))}");
+                    Console.WriteLine($"Found Track: {track.Name} - {string.Join(", ", track.Artists.Select(a => a.Name))}");
                     Console.WriteLine($"SpotifyID: {track.Id}");
                     Console.WriteLine("\n");
 
-                    listOfTrackIds.Add(track.Id);
+                    _listOfTrackIds.Add(track.Id);
                 }
             }
             catch (Exception ex)
@@ -42,6 +44,7 @@ namespace CMDSpotifyClient.Presentation
             Console.WriteLine("\n");
             Console.WriteLine("1. Show me the Track");
             Console.WriteLine("2. <--");
+            Console.WriteLine("\n");
             var option = Console.ReadLine();
 
             try
@@ -49,7 +52,7 @@ namespace CMDSpotifyClient.Presentation
                 switch (option)
                 {
                     case "1":
-                        var GetTrackScreen = new GetTrackScreen(_controller, listOfTrackIds);
+                        var GetTrackScreen = new GetTrackScreen(_controller, _listOfTrackIds);
                         await GetTrackScreen.ShowAsync();
                         break;
                     case "2":
@@ -66,9 +69,11 @@ namespace CMDSpotifyClient.Presentation
     public class SearchArtistScreen
     {
         private Controller _controller;
+        private List<string> _listOfArtistIds;
         public SearchArtistScreen(Controller controller)
         {
             _controller = controller;
+            _listOfArtistIds = new List<string>();  
         }
         public async Task ShowAsync()
         {
@@ -78,12 +83,16 @@ namespace CMDSpotifyClient.Presentation
 
             try
             {
+                Console.Clear();
+                Console.WriteLine("Suggestion based on your search query");
+                Console.WriteLine("\n");
                 var artists = await _controller.SearchArtist(artistName);
                 foreach (var artist in artists)
                 {
                     Console.WriteLine($"Gefunden: {artist.Name}");
                     Console.WriteLine($"SpotifyID: {artist.Id}");
                     Console.WriteLine("\n");
+                    _listOfArtistIds.Add(artist.Id);
                 }
             }
             catch (Exception ex)
@@ -92,8 +101,29 @@ namespace CMDSpotifyClient.Presentation
                 Console.WriteLine($"There has been an Error: {ex.Message}");
             }
 
-            Console.WriteLine("Press any button to continue...");
-            Console.ReadKey();
+            Console.WriteLine("\n");
+            Console.WriteLine("1. Show me the Artist");
+            Console.WriteLine("2. <--");
+            Console.WriteLine("\n");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
+                        var GetArtistScreen = new GetArtistScreen(_controller, _listOfArtistIds);
+                        await GetArtistScreen.ShowAsync();
+                        break;
+                    case "2":
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
         }
     }
     public class SearchAlbumScreen
@@ -170,15 +200,18 @@ namespace CMDSpotifyClient.Presentation
     {
         private Controller _controller;
         private readonly List<string> _listOfTrackIds;
+        private string _previewUrl;
 
         public GetTrackScreen(Controller controller, List<string> listOfTrackIds)
         {
             _controller = controller;
             _listOfTrackIds = listOfTrackIds;
+            _previewUrl = string.Empty; 
         }
         public async Task ShowAsync()
         {
             Console.Clear();
+           
             try
             {
                 foreach (var trackId in _listOfTrackIds)
@@ -202,6 +235,8 @@ namespace CMDSpotifyClient.Presentation
                         Console.WriteLine($"Album Release date: {track.Album.ReleaseDate}");
                         Console.WriteLine($"Total Tracks in Album: {track.Album.TotalTracks}");
                         Console.WriteLine($"Track Position in Album: {track.TrackNumber}");
+                        Console.WriteLine($"Type: {track.Type}");
+                        _previewUrl = track.PreviewUrl;
                         Console.WriteLine("\n");
                     }
                 }
@@ -213,7 +248,9 @@ namespace CMDSpotifyClient.Presentation
             }
 
             Console.WriteLine("\n");
-            Console.WriteLine("1. <--");
+            Console.WriteLine("1. Preview Track");
+            Console.WriteLine("2. <--");
+            Console.WriteLine("\n");
             var option = Console.ReadLine();
 
             try
@@ -221,8 +258,8 @@ namespace CMDSpotifyClient.Presentation
                 switch (option)
                 {
                     case "1":
-                        var SearchTrackScreen = new SearchTrackScreen(_controller);
-                        await SearchTrackScreen.ShowAsync();
+                        var PlayTrackScreen = new PlayTrackScreen(_controller,_previewUrl);
+                        PlayTrackScreen.ShowAsync();
                         break;
                     case "2":
                         break;
@@ -235,6 +272,110 @@ namespace CMDSpotifyClient.Presentation
             }
         }
     }
+    public class GetArtistScreen
+    {
+        private Controller _controller;
+        private readonly List<string> _listOfArtistIds;
+
+        public GetArtistScreen(Controller controller, List<string> listOfArtistIds)
+        {
+            _controller = controller;
+            _listOfArtistIds = listOfArtistIds;
+        }
+        public async Task ShowAsync()
+        {
+            Console.Clear();
+
+            try
+            {
+                foreach (var artistId in _listOfArtistIds)
+                {
+                    var artists = await _controller.GetArtist(artistId);
+                    foreach (var artist in artists)
+                    {
+                        Console.WriteLine($"Name of The Artist: {artist.Name}");
+                        Console.WriteLine("\n");
+                        Console.WriteLine($"SpotifyID: {artist.Id}");
+                        Console.WriteLine($"Followers: {artist.Followers}");
+                        Console.WriteLine($"Popularity: {artist.Popularity}");
+                        int i = 1;  
+                        foreach (var genre in artist.Genre)
+                        {
+                            Console.WriteLine($"Genre {i}: {genre}");
+                            i++;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+
+            Console.WriteLine("\n");
+            Console.WriteLine("1. Preview Trac");
+            Console.WriteLine("2. <--");
+            Console.WriteLine("\n");
+            var option = Console.ReadLine();
+
+            try
+            {
+                switch (option)
+                {
+                    case "1":
+                        break;
+                    case "2":
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine($"There has been an Error: {ex.Message}");
+            }
+        }
+    }
+    // Play Track Screen
+    public class PlayTrackScreen
+    {
+        private Controller _controller;
+        private string _previewUrl;
+        public PlayTrackScreen(Controller controller, string previewUrl)
+        {
+            _controller = controller;
+            _previewUrl = previewUrl;
+        }
+        public void ShowAsync()
+        {
+            string audioUrl = _previewUrl;
+            try
+            {
+                if (audioUrl == null)
+                {
+                    Console.WriteLine("Audio URL is null.");
+                    Console.ReadLine();
+                }
+                using (var webStream = new MediaFoundationReader(audioUrl))
+                using (var outputDevice = new WaveOutEvent())
+                {
+                    outputDevice.Init(webStream);
+                    outputDevice.Play();
+
+                    Console.WriteLine("Press any key to stop playback or go back to Track Search");
+                    Console.ReadKey();
+
+                    outputDevice.Stop();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
+
 
     // Main Menu Page
     public class MainMenuPage
