@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CMDSpotifyClientCleanArchitecture", "CMDSpotifyClientCleanArchitecture.csproj", "{5A7A2FB8-B553-455B-BCCF-9B9ED8DE154B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMDSpotifyClientCleanArchitecture.Tests", "..\CMDSpotifyClientCleanArchitecture.Tests\CMDSpotifyClientCleanArchitecture.Tests.csproj", "{2CDBB3D7-26E8-4FD0-9E34-B9C67BCA832A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CMDSpotifyClientCleanArchitecture.Tests", "..\CMDSpotifyClientCleanArchitecture.Tests\CMDSpotifyClientCleanArchitecture.Tests.csproj", "{2CDBB3D7-26E8-4FD0-9E34-B9C67BCA832A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

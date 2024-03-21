@@ -1,5 +1,5 @@
 ﻿using CMDSpotifyClient.UseCases.Interfaces;
-using CMDSpotifyClientCleanArchitecture.Controller;
+using CMDSpotifyClient.Controller;
 using System.Diagnostics;
 using NAudio.Wave;
 
@@ -8,14 +8,14 @@ namespace CMDSpotifyClient.Presentation
     //Search Pages
     public class SearchTrackScreen
     {
-        private Controller _controller;
+        private Controller.ControllerProject _controller;
         private List<string> _listOfTrackIds;
-        public SearchTrackScreen(Controller controller)
+        public SearchTrackScreen (Controller.ControllerProject controller)
         {
             _controller = controller;
             _listOfTrackIds = new List<string>();
         }
-        public async Task ShowAsync()
+        public async Task ShowAsync ( )
         {
             Console.Clear();
             Console.WriteLine("Enter the name (and/or additional info) of the track you want to search for: ");
@@ -70,14 +70,14 @@ namespace CMDSpotifyClient.Presentation
     }
     public class SearchArtistScreen
     {
-        private Controller _controller;
+        private Controller.ControllerProject _controller;
         private List<string> _listOfArtistIds;
-        public SearchArtistScreen(Controller controller)
+        public SearchArtistScreen (Controller.ControllerProject controller)
         {
             _controller = controller;
-            _listOfArtistIds = new List<string>();  
+            _listOfArtistIds = new List<string>();
         }
-        public async Task ShowAsync()
+        public async Task ShowAsync ( )
         {
             Console.Clear();
             Console.WriteLine("Enter the name (and/or additional info) of the artist you want to search for:");
@@ -132,15 +132,15 @@ namespace CMDSpotifyClient.Presentation
     }
     public class SearchAlbumScreen
     {
-        private readonly Controller _controller;
+        private readonly Controller.ControllerProject _controller;
         private List<string> _listOfAlbumIds;
 
-        public SearchAlbumScreen(Controller controller)
+        public SearchAlbumScreen (Controller.ControllerProject controller)
         {
             _controller = controller;
-            _listOfAlbumIds = new List<string>();   
+            _listOfAlbumIds = new List<string>();
         }
-        public async Task ShowAsync()
+        public async Task ShowAsync ( )
         {
             Console.Clear();
             Console.WriteLine("Enter the name (and/or additional info) of the album you want to search for:");
@@ -195,15 +195,15 @@ namespace CMDSpotifyClient.Presentation
     }
     public class SearchGenrePlaylistScreen
     {
-        private readonly Controller _controller;
+        private readonly Controller.ControllerProject _controller;
         private List<string> _listOfPlaylistIds;
 
-        public SearchGenrePlaylistScreen(Controller controller)
+        public SearchGenrePlaylistScreen (Controller.ControllerProject controller)
         {
             _controller = controller;
             _listOfPlaylistIds = new List<string>();
         }
-        public async Task ShowAsync()
+        public async Task ShowAsync ( )
         {
             Console.Clear();
             Console.WriteLine("Enter a genre (and/or additional info) for which you would like to listen to a playlist:");
@@ -260,20 +260,20 @@ namespace CMDSpotifyClient.Presentation
 
     public class GetTrackScreen
     {
-        private Controller _controller;
+        private Controller.ControllerProject _controller;
         private readonly List<string> _listOfTrackIds;
         private string _previewUrl;
 
-        public GetTrackScreen(Controller controller, List<string> listOfTrackIds)
+        public GetTrackScreen (Controller.ControllerProject controller, List<string> listOfTrackIds)
         {
             _controller = controller;
             _listOfTrackIds = listOfTrackIds;
-            _previewUrl = string.Empty; 
+            _previewUrl = string.Empty;
         }
-        public async Task ShowAsync()
+        public async Task ShowAsync ( )
         {
             Console.Clear();
-           
+
             try
             {
                 foreach (var trackId in _listOfTrackIds)
@@ -321,7 +321,7 @@ namespace CMDSpotifyClient.Presentation
                 switch (option)
                 {
                     case "1":
-                        var PlayTrackScreen = new PlayTrackScreen(_controller,_previewUrl);
+                        var PlayTrackScreen = new PlayTrackScreen(_controller, _previewUrl);
                         PlayTrackScreen.ShowAsync();
                         break;
                     case "2":
@@ -337,15 +337,15 @@ namespace CMDSpotifyClient.Presentation
     }
     public class GetArtistScreen
     {
-        private Controller _controller;
+        private Controller.ControllerProject _controller;
         private readonly List<string> _listOfArtistIds;
 
-        public GetArtistScreen(Controller controller, List<string> listOfArtistIds)
+        public GetArtistScreen (Controller.ControllerProject controller, List<string> listOfArtistIds)
         {
             _controller = controller;
             _listOfArtistIds = listOfArtistIds;
         }
-        public async Task ShowAsync()
+        public async Task ShowAsync ( )
         {
             Console.Clear();
 
@@ -361,7 +361,7 @@ namespace CMDSpotifyClient.Presentation
                         Console.WriteLine($"SpotifyID: {artist.Id}");
                         Console.WriteLine($"Followers: {artist.Followers}");
                         Console.WriteLine($"Popularity: {artist.Popularity}");
-                        int i = 1;  
+                        int i = 1;
                         foreach (var genre in artist.Genre)
                         {
                             Console.WriteLine($"Genre {i}: {genre}");
@@ -399,15 +399,15 @@ namespace CMDSpotifyClient.Presentation
     }
     public class GetAlbumScreen
     {
-        private Controller _controller;
+        private Controller.ControllerProject _controller;
         private readonly List<string> _listOfAlbumIds;
 
-        public GetAlbumScreen(Controller controller, List<string> listOfAlbumIds)
+        public GetAlbumScreen (Controller.ControllerProject controller, List<string> listOfAlbumIds)
         {
             _controller = controller;
             _listOfAlbumIds = listOfAlbumIds;
         }
-        public async Task ShowAsync()
+        public async Task ShowAsync ( )
         {
             Console.Clear();
 
@@ -468,15 +468,15 @@ namespace CMDSpotifyClient.Presentation
     }
     public class GetGenrePlaylistScreen
     {
-        private Controller _controller;
+        private Controller.ControllerProject _controller;
         private readonly List<string> _listOfPlaylistIds;
 
-        public GetGenrePlaylistScreen(Controller controller, List<string> listOfPlaylistIds)
+        public GetGenrePlaylistScreen (Controller.ControllerProject controller, List<string> listOfPlaylistIds)
         {
             _controller = controller;
             _listOfPlaylistIds = listOfPlaylistIds;
         }
-        public async Task ShowAsync()
+        public async Task ShowAsync ( )
         {
             Console.Clear();
 
@@ -532,14 +532,14 @@ namespace CMDSpotifyClient.Presentation
     // Play Track Screen
     public class PlayTrackScreen
     {
-        private Controller _controller;
+        private Controller.ControllerProject _controller;
         private string _previewUrl;
-        public PlayTrackScreen(Controller controller, string previewUrl)
+        public PlayTrackScreen (Controller.ControllerProject controller, string previewUrl)
         {
             _controller = controller;
             _previewUrl = previewUrl;
         }
-        public void ShowAsync()
+        public void ShowAsync ( )
         {
             string audioUrl = _previewUrl;
             try
@@ -573,15 +573,15 @@ namespace CMDSpotifyClient.Presentation
     // Main Menu Page
     public class MainMenuPage
     {
-        private Controller _controller;
+        private Controller.ControllerProject _controller;
 
-        public MainMenuPage(Controller controller)
+        public MainMenuPage (Controller.ControllerProject controller)
 
         {
             _controller = controller;
         }
 
-        public async Task ShowAsync()
+        public async Task ShowAsync ( )
         {
             bool exit = false;
             while (!exit)

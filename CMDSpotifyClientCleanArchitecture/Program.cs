@@ -8,7 +8,7 @@ using CMDSpotifyClient.Presentation;
 using CMDSpotifyClient.Infrastructure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Http;
-using CMDSpotifyClientCleanArchitecture.Controller;
+using CMDSpotifyClient.Controller;
 using CMDSpotifyClient.Repository.Interfaces;
 using CMDSpotifyClient.Repository;
 
@@ -54,7 +54,7 @@ builder.ConfigureServices((hostContext, services) =>
     services.AddTransient<IGetArtistUseCase, GetArtistUseCase>();
     services.AddTransient<IGetAlbumUseCase, GetAlbumUseCase>();
     services.AddTransient<IGetGenrePlaylistUseCase, GetGenrePlaylistUseCase>();
-    services.AddTransient<Controller>();
+    services.AddTransient<ControllerProject>();
 
     // Registrierte Menu Präsentationsschicht
     services.AddTransient<MainMenuPage>();
@@ -80,7 +80,7 @@ var app = builder.Build();
 // Hier beginnt die Ausführung deiner Anwendung
 await RunApplicationAsync(app.Services);
 
-async Task RunApplicationAsync(IServiceProvider services)
+async Task RunApplicationAsync (IServiceProvider services)
 {
     using var scope = services.CreateScope();
     var serviceProvider = scope.ServiceProvider;
