@@ -96,5 +96,69 @@ namespace CMDSpotifyClient.Tests
             Assert.That(result.First().Id, Is.EqualTo("4dpARuHxo51G3z768sgnrY"));
             _spotifySearchAdapterMock.Verify(m => m.SearchArtistAsync(It.IsAny<string>()), Times.Once);
         }
+
+        [Test]
+        public async Task SearchAlbumsAsync_ReturnsCorrectAlbums ( )
+        {
+            // Arrange
+            var albumName = "25";
+            var mockApiResponse = @"{
+                ""albums"": {
+                    ""items"": [
+                        {
+                            ""id"": ""3AvPX1B1HiFROvYjLb5Qwi"",
+                            ""name"": ""25"",
+                            ""artists"": [
+                                {""id"": ""artistId1"", ""name"": ""Adele""}
+                            ],
+                            ""release_date"": ""2015-11-20""
+                        }
+                    ]
+                }
+            }";
+            _spotifySearchAdapterMock.Setup(m => m.SearchAlbumAsync(It.IsAny<string>())).ReturnsAsync(mockApiResponse);
+
+            // Act
+            var result = await _searchRepository.SearchAlbumsAsync(albumName);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.Not.Empty);
+            Assert.That(result.First().Name, Is.EqualTo("25"));
+            Assert.That(result.First().Id, Is.EqualTo("3AvPX1B1HiFROvYjLb5Qwi"));
+            Assert.That(result.First().Artists.First().Name, Is.EqualTo("Adele"));
+
+            var album = result.First();
+            _spotifySearchAdapterMock.Verify(m => m.SearchAlbumAsync(It.IsAny<string>()), Times.Once);
+        }
+
+        [Test]
+        public async Task SearchPlaylistsAsync_ReturnsCorrectPlaylists ( )
+        {
+            // Arrange
+            var genreName = "´House";
+            var mockApiResponse = @"{
+                ""playlists"": {
+                    ""items"": [
+                        {
+                            ""id"": ""1vZNKjqLYfFOfGpCIiW8Q3"",
+                            ""name"": ""House Music 2024 (Top 100)"",
+                        }
+                    ]
+                }
+            }";
+            _spotifySearchAdapterMock.Setup(m => m.SearchGenrePlaylistAsync(It.IsAny<string>())).ReturnsAsync(mockApiResponse);
+
+            // Act
+            var result = await _searchRepository.SearchGenrePlaylistsAsync(genreName);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.Not.Empty);
+            Assert.That(result.First().Name, Is.EqualTo("House Music 2024 (Top 100)"));
+            Assert.That(result.First().Id, Is.EqualTo("1vZNKjqLYfFOfGpCIiW8Q3"));
+
+            _spotifySearchAdapterMock.Verify(m => m.SearchGenrePlaylistAsync(It.IsAny<string>()), Times.Once);
+        }
     }
 }
