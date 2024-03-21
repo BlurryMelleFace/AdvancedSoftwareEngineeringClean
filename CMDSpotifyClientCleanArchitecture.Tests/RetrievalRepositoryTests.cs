@@ -100,5 +100,95 @@
             _spotifyDataRetrievalAdapterMock.Verify(m => m.GetArtistAsync(It.IsAny<string>()), Times.Once);
         }
 
+        [Test]
+        public async Task GetAlbumAsync_ReturnsDetailedAlbumInformation ( )
+        {
+            /// <summary>
+            /// Tests the GetAlbumAsync method in the RetrievalRepository class.
+            /// Verifies that it correctly requests album details from the ISpotifyDataRetrievalAdapter
+            /// for a given album ID, processes the API response, and returns an Album object with the expected properties.
+            /// Also checks that the ISpotifyDataRetrievalAdapter's GetAlbumAsync method was called exactly once.
+            /// </summary>
+
+            // Arrange
+            var albumId = "3AvPX1B1HiFROvYjLb5Qwi";
+            var mockApiResponse = @"{
+                ""id"": ""3AvPX1B1HiFROvYjLb5Qwi"",
+                ""name"": ""25"",
+                ""total_tracks"": 11,
+                ""release_date"": ""2015-11-20"",
+                ""label"": ""XL Recordings"",
+                ""popularity"": 81,
+                ""artists"": [
+                    {
+                        ""id"": ""4dpARuHxo51G3z768sgnrY"",
+                        ""name"": ""Adele""
+                    }
+                ],
+                ""tracks"": {
+                    ""items"": [
+                        {
+                            ""name"": ""Hello"",
+                        },
+                    ]
+                }
+            }";
+            _spotifyDataRetrievalAdapterMock.Setup(m => m.GetAlbumAsync(It.IsAny<string>())).ReturnsAsync(mockApiResponse);
+
+            // Act
+            var result = await _retrievalRepository.GetAlbumAsync(albumId);
+
+            // Assert
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.First().Id, Is.EqualTo(albumId));
+            Assert.That(result.First().Name, Is.EqualTo("25"));
+            Assert.That(result.First().Artists.First().Id, Is.EqualTo("4dpARuHxo51G3z768sgnrY"));
+            Assert.That(result.First().Popularity, Is.EqualTo(81));
+            _spotifyDataRetrievalAdapterMock.Verify(m => m.GetAlbumAsync(It.IsAny<string>()), Times.Once);
+        }
+
+        [Test]
+        public async Task GetGenrePlaylistAsync_ReturnsDetailedPlaylistInformation ( )
+        {
+            /// <summary>
+            /// Tests the GetGenrePlaylistAsync method in the RetrievalRepository class.
+            /// Verifies that it correctly requests playlist details from the ISpotifyDataRetrievalAdapter
+            /// for a given playlist ID, processes the API response, and returns a Playlist object with the expected properties.
+            /// Also checks that the ISpotifyDataRetrievalAdapter's GetGenrePlaylistAsync method was called exactly once.
+            /// </summary>
+
+            // Arrange
+            var playlistId = "37i9dQZF1EIhshGKK0SEkb";
+            var mockApiResponse = @"{
+                ""id"": ""37i9dQZF1EIhshGKK0SEkb"",
+                ""name"": ""Trap Mix"",
+                ""description"": "".."",
+                ""followers"": { ""total"": 0 },
+                ""tracks"": {
+                    ""items"": [
+                        {
+                            ""track"": {
+                                ""id"": ""3TXy6nchgKeYlVwOKNk9lE"",
+                                ""name"": ""100 Shots"",
+                            }
+                        }
+                    ]
+                }
+            }";
+            _spotifyDataRetrievalAdapterMock.Setup(m => m.GetGenrePlaylistAsync(It.IsAny<string>())).ReturnsAsync(mockApiResponse);
+
+            // Act
+            var result = await _retrievalRepository.GetGenrePlaylistAsync(playlistId);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.First().Id, Is.EqualTo(playlistId));
+            Assert.That(result.First().Name, Is.EqualTo("Trap Mix"));
+            Assert.That(result.First().Tracks.First().Id.Equals("3TXy6nchgKeYlVwOKNk9lE"));
+            Assert.That(result.First().Tracks.First().Name.Equals("100 Shots"));
+            _spotifyDataRetrievalAdapterMock.Verify(m => m.GetGenrePlaylistAsync(It.IsAny<string>()), Times.Once);
+        }
+
     }
 }
