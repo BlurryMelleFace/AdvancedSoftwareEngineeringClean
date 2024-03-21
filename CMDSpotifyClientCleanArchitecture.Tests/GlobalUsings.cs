@@ -1,0 +1,11 @@
+global using NUnit.Framework;
+global using Moq;
+global using System.Collections.Generic;
+global using System.Threading.Tasks;
+global using CMDSpotifyClient.Repository.Interfaces;
+global using CMDSpotifyClient.UseCases;
+global using CMDSpotifyClient.Entities;
+global using CMDSpotifyClient.InterfaceAdapters.Interfaces;
+global using CMDSpotifyClient.Repository;
+global using CMDSpotifyClient.UseCases.Interfaces;
+global using CMDSpotifyClient.Controller;

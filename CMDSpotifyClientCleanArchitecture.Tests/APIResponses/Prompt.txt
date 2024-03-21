@@ -1,0 +1,5 @@
+﻿This is My Code. I want you to make 4 Unit Tests and tell me what you tested. I will first give you the Proper API Responses as CSV. Then the code. Proper API Responses Example:Get Track: Track;Track.Id;Track.Name;Track.DurationMin;Track.Explicit;Track.PreviewUrl;Track.Album;Track.Popularity;Track.TrackNumber;Track.Type
+CMDSpotifyClient.Entities.Track;62PaSfnXSMyLshYJrlTuL3;Hello;4:55;False;https://p.scdn.co/mp3-preview/27069a2e4ff7be549a241052b7e3233ac835e1f6?cid=65030c7ddddc4cbe822c46c4277fe265;CMDSpotifyClient.Entities.Album;74;1;track. Get Artist: Artist;Artist.Id;Artist.Name;Artist.Followers;Artist.Popularity
+CMDSpotifyClient.Entities.Artist;4dpARuHxo51G3z768sgnrY;Adele;54212927;85. Search Artist: Artist;Artist.Id;Artist.Name;Artist.Followers;Artist.Popularity
+CMDSpotifyClient.Entities.Artist;4dpARuHxo51G3z768sgnrY;Adele;0;0. Search Track: Track;Track.Id;Track.Name;Track.DurationMin;Track.Explicit;Track.PreviewUrl;Track.Album;Track.Popularity;Track.TrackNumber;Track.Type
+CMDSpotifyClient.Entities.Track;62PaSfnXSMyLshYJrlTuL3;Hello;"";False;"";"";0;0;"". 

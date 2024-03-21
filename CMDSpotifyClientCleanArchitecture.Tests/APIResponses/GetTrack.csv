@@ -1,0 +1,2 @@
+﻿Track;Track.Id;Track.Name;Track.DurationMin;Track.Explicit;Track.PreviewUrl;Track.Album;Track.Popularity;Track.TrackNumber;Track.Type
+CMDSpotifyClient.Entities.Track;62PaSfnXSMyLshYJrlTuL3;Hello;4:55;False;https://p.scdn.co/mp3-preview/27069a2e4ff7be549a241052b7e3233ac835e1f6?cid=65030c7ddddc4cbe822c46c4277fe265;CMDSpotifyClient.Entities.Album;74;1;track
