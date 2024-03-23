@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "by3D87Toeuf6n2K8zEbGJYh16uwUz71tcEZDrq7YMxyJnzHO+YAJv6VrMkjCx/wHlkr5tnZNbngcA+awIDehgg==",
+  "dgSpecHash": "LFmQ/RLfMOizTFdeRCjjjfdBSCN40Vi1xunp6JRUHCJ4CEDSePBRWUP62rQMnlqSpsgBBsNYivBcoS0RiZVFZA==",
   "success": true,
   "projectFilePath": "C:\\Users\\morit\\Desktop\\CMDSpotifyClientCleanArchitecture\\CMDSpotifyClientCleanArchitecture\\CMDSpotifyClientCleanArchitecture.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\morit\\.nuget\\packages\\coverlet.msbuild\\6.0.2\\coverlet.msbuild.6.0.2.nupkg.sha512",
     "C:\\Users\\morit\\.nuget\\packages\\microsoft.extensions.configuration\\8.0.0\\microsoft.extensions.configuration.8.0.0.nupkg.sha512",
     "C:\\Users\\morit\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\8.0.0\\microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\morit\\.nuget\\packages\\microsoft.extensions.configuration.binder\\8.0.0\\microsoft.extensions.configuration.binder.8.0.0.nupkg.sha512",
