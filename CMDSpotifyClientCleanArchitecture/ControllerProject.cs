@@ -36,9 +36,9 @@ namespace CMDSpotifyClient.Controller
             _getGenrePlaylistUseCase = getGenrePlaylistUseCase;
         }
         // Search Use Cases
-        public Task<List<Track>> SearchTrack (string tn)
+        public Task<List<Track>> SearchTrack (string trackName)
         {
-            return _searchTrackUseCase.ExecuteAsync(tn);
+            return _searchTrackUseCase.ExecuteAsync(trackName);
         }
         public Task<List<Artist>> SearchArtist (string artistName)
         {
