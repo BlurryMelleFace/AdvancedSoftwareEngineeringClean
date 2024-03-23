@@ -28,7 +28,7 @@ namespace CMDSpotifyClient.InterfaceAdapters
             var response = await _httpClient.GetAsync(uri);
             if (!response.IsSuccessStatusCode)
             {
-                return $"Spotify API returned error";
+                throw new HttpRequestException($"Spotify API returned error: {response.StatusCode}");
             }
             return await response.Content.ReadAsStringAsync();
         }
