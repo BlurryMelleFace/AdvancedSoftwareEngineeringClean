@@ -22,7 +22,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/CMDSpotifyClient.git
+   git clone https://github.com/BlurryMelleFace/AdvancedSoftwareEngineeringClean.git
    ```
 2. Navigate to the project directory:
    ```
