@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\CMDSpotifyClientCleanArchitecture",
+    "\\CMDSpotifyClientCleanArchitecture.Tests"
   ],
-  "SelectedNode": "\\CMDSpotifyClientCleanArchitecture.sln",
+  "SelectedNode": "\\CMDSpotifyClientCleanArchitecture.Tests\\SearchRepositoryTests.cs",
   "PreviewInSolutionExplorer": false
 }
