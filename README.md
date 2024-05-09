@@ -73,5 +73,3 @@ Moritz Staudacher
 - Anyone whose code was used
 
 ---
-
-Remember to replace placeholders like `yourusername`, `YOUR_CLIENT_ID`, and `YOUR_CLIENT_SECRET` with your actual data. This template should be adapted as necessary to fit the specifics of your project better.
