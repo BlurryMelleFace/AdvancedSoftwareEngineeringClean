@@ -19,7 +19,7 @@
     public class Artist
     {
         public string Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; }    
         public int Followers { get; set; }
         public List<string> Genre { get; set; }
         public int Popularity { get; set; }

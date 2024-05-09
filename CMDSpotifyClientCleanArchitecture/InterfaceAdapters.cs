@@ -33,17 +33,15 @@ namespace CMDSpotifyClient.InterfaceAdapters
             return await response.Content.ReadAsStringAsync();
         }
 
-        public Task<string> SearchTrackAsync (string trackName) =>
-            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/search?q={Uri.EscapeDataString(trackName)}&type=track&limit=1");
+        private Task<string> SearchSpotifyAsync (string searchType, string query) =>
+            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/search?q={Uri.EscapeDataString(query)}&type={searchType}&limit=1");
 
-        public Task<string> SearchAlbumAsync (string albumName) =>
-            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/search?q={Uri.EscapeDataString(albumName)}&type=album&limit=1");
 
-        public Task<string> SearchArtistAsync (string artistName) =>
-            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/search?q={Uri.EscapeDataString(artistName)}&type=artist&limit=1");
+        public Task<string> SearchTrackAsync (string trackName) => SearchSpotifyAsync("track", trackName);
+        public Task<string> SearchAlbumAsync (string albumName) => SearchSpotifyAsync("album", albumName);
+        public Task<string> SearchArtistAsync (string artistName) => SearchSpotifyAsync("artist", artistName);
+        public Task<string> SearchGenrePlaylistAsync (string genreName) => SearchSpotifyAsync("playlist", genreName);
 
-        public Task<string> SearchGenrePlaylistAsync (string genreName) =>
-            GetAuthorizedContentAsync($"{BaseSpotifyUrl}/search?q={Uri.EscapeDataString(genreName)}&type=playlist&limit=1");
 
         public Task<string> GetTrackAsync (string trackId) =>
             GetAuthorizedContentAsync($"{BaseSpotifyUrl}/tracks/{trackId}");
